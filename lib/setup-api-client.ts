@@ -1,6 +1,6 @@
 import { OpenAPI } from '@/api';
 import axios, { AxiosRequestConfig } from 'axios';
-import { getCookie, getCookies } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 
 export async function setupApiClientAuth(token?: string) {
    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {

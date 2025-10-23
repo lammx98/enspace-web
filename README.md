@@ -38,3 +38,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Import API
 npx openapi --input http://localhost:5000/swagger/v1/swagger.json --output api --client axios --useOptions
+
+
+# 
+docker build --platform linux/amd64 -t lammx98/es-web:latest .
