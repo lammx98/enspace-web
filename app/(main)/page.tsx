@@ -5,8 +5,24 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { VocabService } from "@/api/services/VocabService";
 import type { VocabDTO } from "@/api/models/VocabDTO";
+import { useSpeech } from "react-text-to-speech";
 
 // Removed local QuizVocab interface in favor of VocabDTO
+function speak(text: string, options?: SpeechSynthesisUtterance) {
+   if (!("speechSynthesis" in window)) {
+      alert("Sorry, your browser does not support text-to-speech!");
+      return;
+   }
+
+   const utterance = new SpeechSynthesisUtterance(text);
+   utterance.lang = options?.lang || "en-US";
+   utterance.rate = options?.rate || 1;
+   utterance.pitch = options?.pitch || 1;
+   utterance.volume = options?.volume || 1;
+
+   window.speechSynthesis.cancel(); // stop any ongoing speech
+   window.speechSynthesis.speak(utterance);
+}
 
 export default function GenZQuizScreen() {
    const [vocabs, setVocabs] = useState<VocabDTO[]>([]);
@@ -15,6 +31,12 @@ export default function GenZQuizScreen() {
    const [isAnswered, setIsAnswered] = useState(false);
    const [score, setScore] = useState(0);
    const [options, setOptions] = useState<VocabDTO[]>([]);
+   const { start, stop } = useSpeech({
+      text: selected?.word,
+      lang: "en-US",
+      rate: 1,
+      pitch: 1,
+   });
 
    // Load initial vocab on mount
    useEffect(() => {
@@ -46,9 +68,14 @@ export default function GenZQuizScreen() {
 
       // Use VocabDTO directly
       const uniqueWrongOptions = new Set<VocabDTO>();
-      const otherVocabs = vocabs.filter((vocab: VocabDTO) => vocab.id !== currentVocab.id);
+      const otherVocabs = vocabs.filter(
+         (vocab: VocabDTO) => vocab.id !== currentVocab.id
+      );
 
-      while (uniqueWrongOptions.size < 3 && uniqueWrongOptions.size < otherVocabs.length) {
+      while (
+         uniqueWrongOptions.size < 3 &&
+         uniqueWrongOptions.size < otherVocabs.length
+      ) {
          const randomIndex = Math.floor(Math.random() * otherVocabs.length);
          uniqueWrongOptions.add(otherVocabs[randomIndex]);
       }
@@ -63,6 +90,7 @@ export default function GenZQuizScreen() {
          setSelected(option);
          setIsAnswered(true);
          const current = vocabs[currentIndex];
+         current.word && speak(current.word)
          if (option.id === current.id) {
             setScore((prev) => prev + 1);
          }
@@ -71,10 +99,7 @@ export default function GenZQuizScreen() {
 
    const handleNext = async () => {
       const nextIndex = currentIndex + 1;
-      // When reaching 80% of the current vocab list, load more
-      if (nextIndex / vocabs.length >= 0.8) {
-         await loadVocab();
-      }
+      
       if (nextIndex < vocabs.length) {
          setCurrentIndex(nextIndex);
          setSelected(null);
@@ -118,9 +143,17 @@ export default function GenZQuizScreen() {
                            onClick={() => handleSelect(option)}
                            className={cn(
                               "w-full py-4 rounded-2xl text-lg font-semibold transition-all border-2 backdrop-blur-md bg-white/10 hover:bg-white/20 hover:cursor-pointer",
-                              isAnswered && isOptionSelected && isCorrect && "border-green-400 text-green-900",
-                              isAnswered && isOptionSelected && !isCorrect && "border-red-400 text-red-900",
-                              isAnswered && !isOptionSelected ? "opacity-60" : ""
+                              isAnswered &&
+                                 isOptionSelected &&
+                                 isCorrect &&
+                                 "border-green-400 text-green-900",
+                              isAnswered &&
+                                 isOptionSelected &&
+                                 !isCorrect &&
+                                 "border-red-400 text-red-900",
+                              isAnswered && !isOptionSelected
+                                 ? "opacity-60"
+                                 : ""
                            )}
                         >
                            {capitalizeFirstLetter(option.mean)}
