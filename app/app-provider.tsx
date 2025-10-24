@@ -1,8 +1,8 @@
 "use client";
-import { setupApiClientAuth } from "@/lib/setup-api-client";
+import { setupApiClient } from "@/lib/setup-api-client";
 import React, { FC, ReactNode } from "react";
 
-setupApiClientAuth();
+setupApiClient();
 
 interface AppProviderProps {
    children?: ReactNode;
