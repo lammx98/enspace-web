@@ -7,7 +7,9 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export { EVocabType } from './models/EVocabType';
 export type { VocabDTO } from './models/VocabDTO';
 export type { VocabDTOListApiResponse } from './models/VocabDTOListApiResponse';
+export type { VocabTopic } from './models/VocabTopic';
 
 export { VocabService } from './services/VocabService';

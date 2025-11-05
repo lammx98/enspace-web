@@ -2,10 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { EVocabType } from './EVocabType';
 export type VocabDTO = {
     id?: number | null;
-    word?: string | null;
-    mean?: string | null;
-    topicId?: number | null;
+    text?: string | null;
+    meaning?: string | null;
+    type?: EVocabType;
 };
 
