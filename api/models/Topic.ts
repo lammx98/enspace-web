@@ -2,7 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export enum EVocabType {
-    '_0' = 0,
-    '_1' = 1,
-}
+export type Topic = {
+    id?: number | null;
+    name?: string | null;
+    status?: boolean | null;
+    userId?: number | null;
+};
+

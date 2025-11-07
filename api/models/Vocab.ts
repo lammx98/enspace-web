@@ -2,11 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { EPartsOfSpeech } from './EPartsOfSpeech';
-export type VocabDTO = {
+import type { EVocabType } from './EVocabType';
+export type Vocab = {
     id?: number | null;
     text?: string | null;
     meaning?: string | null;
-    type?: EPartsOfSpeech;
+    context?: string | null;
+    partsOfSpeech?: string | null;
+    level?: string | null;
+    type?: EVocabType;
+    randomKey?: number | null;
 };
 
