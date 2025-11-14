@@ -1,29 +1,99 @@
-'use client';
+"use client";
 
-import { GameHeader } from '@/components/GameHeader';
-import { LeaderboardPanel } from '@/components/LeaderboardPanel';
-import { LearningPath } from '@/components/LearningPath';
-import { StreakModal } from '@/components/StreakModal';
-import { useAppStore } from '@/hooks/use-app';
-import React, { FC, useState } from 'react';
+import { LearningPath } from "@/components/LearningPath";
+import { StreakModal } from "@/components/StreakModal";
+import { LeaderboardPanel } from "@/components/LeaderboardPanel";
+import { QuizGame } from "@/components/QuizGame";
+import { QuizResults } from "@/components/QuizResults";
+import { useState, useEffect } from "react";
+import { GameHeader } from "@/components/GameHeader";
+import { useAppStore } from "@/hooks/use-app";
+import { useRouter } from "next/navigation";
 
-interface LearnPageProps {}
+type Screen = "learning" | "quiz" | "results";
 
-const LearnPage: FC<LearnPageProps> = ({}) => {
-   const activeTopic = useAppStore((s) => s.activeTopic);
+export default function LearnPage() {
    const [showLeaderboard, setShowLeaderboard] = useState(false);
-   if (!activeTopic) return null;
+   const [currentScreen, setCurrentScreen] = useState<Screen>("learning");
+   const [selectedLesson, setSelectedLesson] = useState<number>(1);
+   const [quizScore, setQuizScore] = useState(0);
+   const [totalQuestions, setTotalQuestions] = useState(5);
+   const [xpEarned, setXpEarned] = useState(0);
+   
+   const activeTopic = useAppStore((s) => s.activeTopic);
+   const router = useRouter();
+
+   useEffect(() => {
+      // Redirect to home if no topic selected
+      if (!activeTopic) {
+         router.push("/");
+      }
+   }, [activeTopic, router]);
+
+   const handleBackToTopics = () => {
+      router.push("/");
+   };
+
+   const handleStartQuiz = (lessonId: number) => {
+      setSelectedLesson(lessonId);
+      setCurrentScreen("quiz");
+   };
+
+   const handleQuizComplete = (score: number, total: number, xp: number) => {
+      setQuizScore(score);
+      setTotalQuestions(total);
+      setXpEarned(xp);
+      setCurrentScreen("results");
+   };
+
+   const handleRestartQuiz = () => {
+      setCurrentScreen("quiz");
+   };
+
+   const handleGoHome = () => {
+      setCurrentScreen("learning");
+   };
+
+   // Quiz Screen
+   if (currentScreen === "quiz") {
+      return (
+         <QuizGame
+            lessonId={selectedLesson}
+            onExit={() => setCurrentScreen("learning")}
+            onComplete={handleQuizComplete}
+         />
+      );
+   }
+
+   // Results Screen
+   if (currentScreen === "results") {
+      return (
+         <QuizResults
+            score={quizScore}
+            totalQuestions={totalQuestions}
+            xpEarned={xpEarned}
+            onRestart={handleRestartQuiz}
+            onHome={handleGoHome}
+         />
+      );
+   }
+
+   // Learning Path Screen
    return (
       <div className="min-h-screen bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400 overflow-hidden">
-         <GameHeader onLeaderboardClick={() => setShowLeaderboard(!showLeaderboard)} />
+         <GameHeader
+            onLeaderboardClick={() => setShowLeaderboard(!showLeaderboard)}
+         />
 
          <div className="flex gap-6 max-w-7xl mx-auto px-4 py-6">
             <div className="flex-1">
-               <LearningPath
-                  topicId={activeTopic}
-                  // onStartLesson={handleStartQuiz}
-                  // onBack={handleBackToTopics}
-               />
+               {activeTopic && (
+                  <LearningPath
+                     topicId={activeTopic}
+                     onStartLesson={handleStartQuiz}
+                     onBack={handleBackToTopics}
+                  />
+               )}
             </div>
 
             {showLeaderboard && (
@@ -36,6 +106,4 @@ const LearnPage: FC<LearnPageProps> = ({}) => {
          <StreakModal />
       </div>
    );
-};
-
-export default LearnPage;
+}

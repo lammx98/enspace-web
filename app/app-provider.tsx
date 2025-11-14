@@ -1,6 +1,7 @@
 "use client";
 import { setupApiClient } from "@/lib/setup-api-client";
 import React, { FC, ReactNode } from "react";
+import { AuthProvider } from "@/contexts/auth-context";
 
 setupApiClient();
 
@@ -9,7 +10,7 @@ interface AppProviderProps {
 }
 
 const AppProvider: FC<AppProviderProps> = (props) => {
-   return <>{props.children}</>;
+   return <AuthProvider>{props.children}</AuthProvider>;
 };
 
 export default AppProvider;

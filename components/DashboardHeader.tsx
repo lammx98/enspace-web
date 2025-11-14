@@ -1,8 +1,58 @@
-import { Bell, Search, Menu } from "lucide-react";
+import { Bell, Search, Menu, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import { useAuth } from "@/contexts/auth-context";
+import { useState, useEffect } from "react";
+import { MeService } from "@/api/enspace-progress";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function DashboardHeader() {
+  const { user, logout } = useAuth();
+  const [stats, setStats] = useState({
+    streak: 0,
+    level: 1,
+    completedToday: 0,
+    dailyGoal: 5,
+  });
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const response = await MeService.getApiMeStats();
+      if (response.result) {
+        setStats({
+          streak: response.result.currentStreak || 0,
+          level: 1, // level not in StatsDto
+          completedToday: response.result.completedWords || 0,
+          dailyGoal: 5, // dailyGoal not in StatsDto
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch stats:", error);
+    }
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
+  };
+
+  const firstName = user?.fullName?.split(" ")[0] || "User";
+
   return (
     <header className="mb-8">
       <div className="flex items-center justify-between mb-6">
@@ -11,7 +61,7 @@ export function DashboardHeader() {
         </button>
         
         <div className="hidden md:block">
-          <h1 className="text-gray-900 mb-1">Hey Alex! 👋</h1>
+          <h1 className="text-gray-900 mb-1">Hey {firstName}! 👋</h1>
           <p className="text-gray-600 text-sm">Ready to level up your English?</p>
         </div>
 
@@ -30,22 +80,41 @@ export function DashboardHeader() {
             <span className="absolute top-1 right-1 w-2 h-2 bg-pink-500 rounded-full"></span>
           </button>
 
-          <Avatar>
-            <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" />
-            <AvatarFallback>AX</AvatarFallback>
-          </Avatar>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="focus:outline-none">
+                <Avatar className="cursor-pointer hover:scale-105 transition-transform">
+                  <AvatarImage src={user?.pictureUrl || undefined} />
+                  <AvatarFallback>{user ? getInitials(user.fullName) : "?"}</AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>
+                <div className="flex flex-col">
+                  <span className="font-semibold">{user?.fullName}</span>
+                  <span className="text-xs text-gray-500">{user?.email}</span>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout} className="text-red-600 cursor-pointer">
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
         <Badge className="bg-gradient-to-r from-orange-400 to-pink-500 text-white border-0">
-          🔥 7 Day Streak
+          🔥 {stats.streak} Day Streak
         </Badge>
         <Badge className="bg-gradient-to-r from-purple-400 to-blue-500 text-white border-0">
-          ⚡ Level 12
+          ⚡ Level {stats.level}
         </Badge>
         <Badge className="bg-gradient-to-r from-green-400 to-teal-500 text-white border-0">
-          🎯 Daily Goal: 3/5
+          🎯 Daily Goal: {stats.completedToday}/{stats.dailyGoal}
         </Badge>
       </div>
     </header>

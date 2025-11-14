@@ -12,9 +12,11 @@ import {
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/hooks/use-app";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { TopicsService, TopicDto } from "@/api/enspace-content";
 
 interface Topic {
-   id: string;
+   id: number;
    name: string;
    description: string;
    icon: any;
@@ -29,103 +31,101 @@ interface TopicSelectionProps {
    onSelectTopic: (topicId: string) => void;
 }
 
-const topics: Topic[] = [
+const defaultTopics: Topic[] = [
    {
-      id: "basics",
+      id: 1,
       name: "Basics",
       description: "Start your English journey",
       icon: Book,
       color: "blue",
       gradient: "from-blue-400 to-blue-600",
-      progress: 65,
+      progress: 0,
       lessonsCount: 12,
       emoji: "📚",
    },
    {
-      id: "conversation",
+      id: 2,
       name: "Conversation",
       description: "Practice everyday dialogues",
       icon: MessageCircle,
       color: "green",
       gradient: "from-green-400 to-green-600",
-      progress: 40,
+      progress: 0,
       lessonsCount: 15,
       emoji: "💬",
-   },
-   {
-      id: "vocabulary",
-      name: "Vocabulary",
-      description: "Expand your word bank",
-      icon: Lightbulb,
-      color: "yellow",
-      gradient: "from-yellow-400 to-orange-500",
-      progress: 55,
-      lessonsCount: 20,
-      emoji: "💡",
-   },
-   {
-      id: "grammar",
-      name: "Grammar",
-      description: "Master the rules",
-      icon: Pen,
-      color: "purple",
-      gradient: "from-purple-400 to-purple-600",
-      progress: 30,
-      lessonsCount: 18,
-      emoji: "✍️",
-   },
-   {
-      id: "culture",
-      name: "Culture",
-      description: "Learn about English culture",
-      icon: Music,
-      color: "pink",
-      gradient: "from-pink-400 to-pink-600",
-      progress: 20,
-      lessonsCount: 10,
-      emoji: "🎭",
-   },
-   {
-      id: "business",
-      name: "Business",
-      description: "Professional English",
-      icon: Briefcase,
-      color: "indigo",
-      gradient: "from-indigo-400 to-indigo-600",
-      progress: 10,
-      lessonsCount: 14,
-      emoji: "💼",
-   },
-   {
-      id: "travel",
-      name: "Travel",
-      description: "English for travelers",
-      icon: Plane,
-      color: "cyan",
-      gradient: "from-cyan-400 to-cyan-600",
-      progress: 45,
-      lessonsCount: 12,
-      emoji: "✈️",
-   },
-   {
-      id: "idioms",
-      name: "Idioms & Slang",
-      description: "Sound like a native",
-      icon: Heart,
-      color: "red",
-      gradient: "from-red-400 to-red-600",
-      progress: 15,
-      lessonsCount: 16,
-      emoji: "🤙",
    },
 ];
 export function TopicSelection({ onSelectTopic }: TopicSelectionProps) {
    const router = useRouter();
    const setActiveTopic = useAppStore((s) => s.setActiveTopic);
-   const onSelect = (topicId: string) => {
-      setActiveTopic(topicId)
-      router.push('/learn')
+   const [topics, setTopics] = useState<Topic[]>([]);
+   const [isLoading, setIsLoading] = useState(true);
+
+   useEffect(() => {
+      fetchTopics();
+   }, []);
+
+   const fetchTopics = async () => {
+      try {
+         const response = await TopicsService.getApiTopics();
+         if (response.result) {
+            // Map API data to UI format
+            const mappedTopics = response.result.map((topic, index) => ({
+               id: topic.id!,
+               name: topic.name!,
+               description: topic.description || "Start learning now",
+               icon: getIconForIndex(index),
+               color: getColorForIndex(index),
+               gradient: getGradientForIndex(index),
+               progress: 0, // TODO: Get from progress API
+               lessonsCount: 0, // TODO: Get lesson count
+               emoji: getEmojiForIndex(index),
+            }));
+            setTopics(mappedTopics);
+         }
+      } catch (error) {
+         console.error("Failed to fetch topics:", error);
+         // Use fallback topics
+         setTopics(defaultTopics);
+      } finally {
+         setIsLoading(false);
+      }
    };
+
+   const getIconForIndex = (index: number) => {
+      const icons = [Book, MessageCircle, Lightbulb, Pen, Music, Briefcase, Plane, Heart];
+      return icons[index % icons.length];
+   };
+
+   const getColorForIndex = (index: number) => {
+      const colors = ["blue", "green", "yellow", "purple", "pink", "indigo", "cyan", "red"];
+      return colors[index % colors.length];
+   };
+
+   const getGradientForIndex = (index: number) => {
+      const gradients = [
+         "from-blue-400 to-blue-600",
+         "from-green-400 to-green-600",
+         "from-yellow-400 to-orange-500",
+         "from-purple-400 to-purple-600",
+         "from-pink-400 to-pink-600",
+         "from-indigo-400 to-indigo-600",
+         "from-cyan-400 to-cyan-600",
+         "from-red-400 to-red-600",
+      ];
+      return gradients[index % gradients.length];
+   };
+
+   const getEmojiForIndex = (index: number) => {
+      const emojis = ["📚", "💬", "💡", "✍️", "🎭", "💼", "✈️", "🤙"];
+      return emojis[index % emojis.length];
+   };
+
+   const onSelect = (topicId: number) => {
+      setActiveTopic(topicId.toString());
+      router.push('/learn');
+   };
+
    const getProgressColor = (color: string) => {
       const colors: { [key: string]: string } = {
          blue: "bg-blue-500",
@@ -139,6 +139,14 @@ export function TopicSelection({ onSelectTopic }: TopicSelectionProps) {
       };
       return colors[color] || "bg-blue-500";
    };
+
+   if (isLoading) {
+      return (
+         <div className="flex items-center justify-center min-h-screen">
+            <div className="text-white text-2xl font-bold">Loading topics...</div>
+         </div>
+      );
+   }
 
    return (
       <div className="pb-20">

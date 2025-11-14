@@ -3,9 +3,12 @@ import { motion, AnimatePresence } from "motion/react";
 import { X, Heart, Zap, CheckCircle, XCircle, ArrowRight } from "lucide-react";
 import { Progress } from "./ui/progress";
 import { Button } from "./ui/button";
+import { WordsService, WordDto } from "@/api/enspace-content";
+import { StudyService } from "@/api/enspace-progress";
 
 interface Question {
   id: number;
+  wordId: number;
   question: string;
   options: string[];
   correctAnswer: number;
@@ -13,11 +16,12 @@ interface Question {
 }
 
 interface QuizGameProps {
+  lessonId?: number;
   onExit?: () => void;
   onComplete?: (score: number, total: number, xp: number) => void;
 }
 
-export function QuizGame({ onExit, onComplete }: QuizGameProps) {
+export function QuizGame({ lessonId, onExit, onComplete }: QuizGameProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -26,10 +30,62 @@ export function QuizGame({ onExit, onComplete }: QuizGameProps) {
   const [xp, setXp] = useState(0);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const questions: Question[] = [
+  useEffect(() => {
+    if (lessonId) {
+      fetchWords();
+    } else {
+      // Use default questions
+      setQuestions(defaultQuestions);
+      setIsLoading(false);
+    }
+  }, [lessonId]);
+
+  const fetchWords = async () => {
+    try {
+      const response = await WordsService.getApiWords({
+        lessonId: lessonId,
+      });
+
+      if (response.result && response.result.length > 0) {
+        const quizQuestions = response.result.slice(0, 5).map((word, index) => {
+          // Generate wrong answers
+          const wrongAnswers = response.result!
+            .filter(w => w.id !== word.id)
+            .slice(0, 3)
+            .map(w => w.meaningVi || '');
+          
+          const options = [word.meaningVi || '', ...wrongAnswers].sort(() => Math.random() - 0.5);
+          const correctIndex = options.indexOf(word.meaningVi || '');
+
+          return {
+            id: index + 1,
+            wordId: word.id,
+            question: `What does "${word.text}" mean?`,
+            options,
+            correctAnswer: correctIndex,
+            explanation: `${word.text} means "${word.meaningVi}". ${word.examples[0] || ''}`,
+          };
+        });
+
+        setQuestions(quizQuestions);
+      } else {
+        setQuestions(defaultQuestions);
+      }
+    } catch (error) {
+      console.error('Failed to fetch words:', error);
+      setQuestions(defaultQuestions);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const defaultQuestions: Question[] = [
     {
       id: 1,
+      wordId: 0,
       question: "What does 'serendipity' mean?",
       options: [
         "A type of dessert",
@@ -42,6 +98,7 @@ export function QuizGame({ onExit, onComplete }: QuizGameProps) {
     },
     {
       id: 2,
+      wordId: 0,
       question: "Choose the correct sentence:",
       options: [
         "She don't like pizza",
@@ -54,6 +111,7 @@ export function QuizGame({ onExit, onComplete }: QuizGameProps) {
     },
     {
       id: 3,
+      wordId: 0,
       question: "What is the past tense of 'go'?",
       options: ["Goed", "Went", "Gone", "Going"],
       correctAnswer: 1,
@@ -61,6 +119,7 @@ export function QuizGame({ onExit, onComplete }: QuizGameProps) {
     },
     {
       id: 4,
+      wordId: 0,
       question: "Which word means 'very hungry'?",
       options: ["Thirsty", "Starving", "Sleepy", "Angry"],
       correctAnswer: 1,
@@ -68,6 +127,7 @@ export function QuizGame({ onExit, onComplete }: QuizGameProps) {
     },
     {
       id: 5,
+      wordId: 0,
       question: "Complete: 'I ___ coffee every morning.'",
       options: ["drinks", "drinking", "drink", "drank"],
       correctAnswer: 2,
@@ -80,7 +140,7 @@ export function QuizGame({ onExit, onComplete }: QuizGameProps) {
     setSelectedAnswer(index);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedAnswer === null) return;
 
     const correct = selectedAnswer === questions[currentQuestion].correctAnswer;
@@ -92,8 +152,34 @@ export function QuizGame({ onExit, onComplete }: QuizGameProps) {
       setXp(xp + 10);
       setShowCelebration(true);
       setTimeout(() => setShowCelebration(false), 1000);
+
+      // Track progress via API
+      if (questions[currentQuestion].wordId) {
+        try {
+          await StudyService.postApiStudyLearn({
+            requestBody: {
+              wordId: questions[currentQuestion].wordId,
+            },
+          });
+        } catch (error) {
+          console.error('Failed to track progress:', error);
+        }
+      }
     } else {
       setHearts(Math.max(0, hearts - 1));
+      
+      // Track incorrect answer (still track to update statistics)
+      if (questions[currentQuestion].wordId) {
+        try {
+          await StudyService.postApiStudyLearn({
+            requestBody: {
+              wordId: questions[currentQuestion].wordId,
+            },
+          });
+        } catch (error) {
+          console.error('Failed to track progress:', error);
+        }
+      }
     }
   };
 
@@ -110,6 +196,23 @@ export function QuizGame({ onExit, onComplete }: QuizGameProps) {
       }
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400">
+        <div className="text-white text-2xl font-bold">Loading quiz...</div>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400">
+        <div className="text-white text-2xl font-bold mb-4">No questions available</div>
+        <Button onClick={onExit} variant="outline">Go Back</Button>
+      </div>
+    );
+  }
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
   const isLastQuestion = currentQuestion === questions.length - 1;
