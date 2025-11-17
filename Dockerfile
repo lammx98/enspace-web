@@ -1,25 +1,47 @@
-# Stage 1: Chạy production
-FROM node:22-alpine AS runner
-
-# Tạo thư mục làm việc
+# Dependencies stage
+FROM node:22-alpine AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy file cần thiết (đã có bản build sẵn ngoài host)
-COPY .next ./.next
-COPY public ./public
-COPY package.json ./
-COPY next.config.ts ./
-COPY node_modules ./node_modules
+# Copy package files
+COPY package.json package-lock.json* ./
+RUN npm ci --legacy-peer-deps
 
-# Nếu bạn dùng .env.production hoặc tương tự
-COPY .env .env
+# Builder stage
+FROM node:22-alpine AS builder
+WORKDIR /app
 
-# Cấu hình biến môi trường
+# Copy dependencies and source
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Build the application
+ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+RUN npm run build
+
+# Runner stage
+FROM node:22-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 
-# Mở cổng
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy necessary files
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
 EXPOSE 3000
 
-# Lệnh chạy Next.js server
-CMD ["yarn", "start"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+
+CMD ["node", "server.js"]
