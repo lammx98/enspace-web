@@ -1,36 +1,36 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useAuth } from "@/contexts/auth-context";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import { useAuth } from '@/contexts/auth-context';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
-   const [error, setError] = useState("");
+   const [email, setEmail] = useState('');
+   const [password, setPassword] = useState('');
+   const [error, setError] = useState('');
    const [isLoading, setIsLoading] = useState(false);
    const { login } = useAuth();
    const router = useRouter();
 
    const handleGoogleLogin = () => {
-      const baseUrl = process.env.NEXT_PUBLIC_API_AUTH_URL || "http://localhost:5000";
+      const baseUrl = 'https://localhost:5001';
       window.location.href = `${baseUrl}/auth/google-login?returnUrl=${window.location.origin}/auth/callback`;
    };
 
    const handleLogin = async (e: React.FormEvent) => {
       e.preventDefault();
-      setError("");
+      setError('');
       setIsLoading(true);
 
       try {
          await login(email, password);
-         router.push("/");
+         router.push('/');
       } catch (err: any) {
-         setError(err?.message || "Login failed. Please check your credentials.");
+         setError(err?.message || 'Login failed. Please check your credentials.');
       } finally {
          setIsLoading(false);
       }
@@ -41,39 +41,21 @@ export default function LoginPage() {
          <Card className="w-full max-w-md mx-4">
             <CardHeader className="space-y-1">
                <CardTitle className="text-2xl font-bold text-center">Welcome back!</CardTitle>
-               <CardDescription className="text-center">
-                  Sign in to continue your English learning journey
-               </CardDescription>
+               <CardDescription className="text-center">Sign in to continue your English learning journey</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
                      <Label htmlFor="email">Email</Label>
-                     <Input
-                        id="email"
-                        type="email"
-                        placeholder="your@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                     />
+                     <Input id="email" type="email" placeholder="your@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
                   </div>
                   <div className="space-y-2">
                      <Label htmlFor="password">Password</Label>
-                     <Input
-                        id="password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                     />
+                     <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
-                  {error && (
-                     <div className="text-sm text-red-500 text-center">{error}</div>
-                  )}
+                  {error && <div className="text-sm text-red-500 text-center">{error}</div>}
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                     {isLoading ? "Signing in..." : "Sign In"}
+                     {isLoading ? 'Signing in...' : 'Sign In'}
                   </Button>
                </form>
 
@@ -82,18 +64,11 @@ export default function LoginPage() {
                      <span className="w-full border-t" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                     <span className="bg-background px-2 text-muted-foreground">
-                        Or continue with
-                     </span>
+                     <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
                   </div>
                </div>
 
-               <Button
-                  onClick={handleGoogleLogin}
-                  variant="outline"
-                  className="w-full"
-                  type="button"
-               >
+               <Button onClick={handleGoogleLogin} variant="outline" className="w-full" type="button">
                   <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                      <path
                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

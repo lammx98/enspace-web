@@ -1,20 +1,20 @@
-import { OpenAPI as AuthOpenAPI } from "@/api/genzy-auth";
-import { OpenAPI as ContentOpenAPI } from "@/api/enspace-content";
-import { OpenAPI as ProgressOpenAPI } from "@/api/enspace-progress";
-import { cookies } from 'next/headers';
+import { OpenAPI } from '@/api/genzy-auth';
+import https from 'https';
 
 export async function setupApiServer(token?: string) {
-   const authToken = token ?? (await cookies()).get('auth_token')?.value ?? '';
-   
-   // Setup Auth API
-   AuthOpenAPI.BASE = process.env.API_AUTH_URL || 'http://localhost:5000';
-   AuthOpenAPI.TOKEN = async () => authToken;
-   
-   // Setup Content API
-   ContentOpenAPI.BASE = process.env.API_CONTENT_URL || 'http://localhost:5001';
-   ContentOpenAPI.TOKEN = async () => authToken;
-   
-   // Setup Progress API
-   ProgressOpenAPI.BASE = process.env.API_PROGRESS_URL || 'http://localhost:5002';
-   ProgressOpenAPI.TOKEN = async () => authToken;
+  OpenAPI.BASE = process.env.NEXT_PUBLIC_API_URL || 'https://localhost:7777';
+  
+  if (token) {
+    OpenAPI.TOKEN = token;
+  }
+
+  // Bypass SSL verification for development with self-signed certificates
+  if (process.env.NODE_ENV === 'development') {
+    const agent = new https.Agent({
+      rejectUnauthorized: false
+    });
+    OpenAPI.HEADERS = async () => ({
+      httpsAgent: agent
+    } as any);
+  }
 }
