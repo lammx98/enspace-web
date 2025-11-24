@@ -2,19 +2,19 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApiResponseOfStatsDto } from '../models/ApiResponseOfStatsDto';
+import type { StatsDtoApiResponse } from '../models/StatsDtoApiResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MeService {
     /**
-     * @returns ApiResponseOfStatsDto OK
+     * @returns StatsDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiMeStats(): CancelablePromise<ApiResponseOfStatsDto> {
+    public static getApiV1ProgressMeStats(): CancelablePromise<StatsDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/Me/stats',
+            url: '/api/v1/progress/Me/stats',
         });
     }
 }

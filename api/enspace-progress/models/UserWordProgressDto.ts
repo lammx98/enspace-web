@@ -3,11 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserWordProgressDto = {
-    id: number;
-    wordId: number;
-    stage: number;
-    nextReviewAt: string;
-    learnedAt: string;
-    completed: boolean;
+    id?: number;
+    wordId?: number;
+    stage?: number;
+    nextReviewAt?: string;
+    learnedAt?: string;
+    completed?: boolean;
 };
 

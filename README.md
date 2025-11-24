@@ -37,7 +37,9 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 
 ## Import API
-npx openapi --input http://localhost:5000/swagger/v1/swagger.json --output api --client axios --useOptions
+npx openapi --input http://localhost:5000/swagger/v1/swagger.json --output api/genzy-auth --client axios --useOptions
+npx openapi --input http://localhost:5001/swagger/v1/swagger.json --output api/enspace-content --client axios --useOptions
+npx openapi --input http://localhost:5002/swagger/v1/swagger.json --output api/enspace-progress --client axios --useOptions
 
 
 # 

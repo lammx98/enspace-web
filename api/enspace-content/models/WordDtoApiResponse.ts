@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UserWordProgressDto } from './UserWordProgressDto';
-export type ApiResponseOfUserWordProgressDto = {
+import type { WordDto } from './WordDto';
+export type WordDtoApiResponse = {
     success?: boolean;
     message?: string | null;
-    result?: UserWordProgressDto;
+    result?: WordDto;
     error?: any;
 };
 

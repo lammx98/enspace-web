@@ -3,10 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type WordUpdateRequest = {
-    lessonId: number;
-    text: string;
-    meaningVi: string;
-    imageUrl: string | null;
-    examples: Array<string>;
+    lessonId?: number;
+    text?: string | null;
+    meaningVi?: string | null;
+    imageUrl?: string | null;
+    examples?: Array<string> | null;
 };
 

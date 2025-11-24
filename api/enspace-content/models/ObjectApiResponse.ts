@@ -2,11 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { WordDto } from './WordDto';
-export type ApiResponseOfListOfWordDto = {
+export type ObjectApiResponse = {
     success?: boolean;
     message?: string | null;
-    result?: Array<WordDto> | null;
+    result?: any;
     error?: any;
 };
 

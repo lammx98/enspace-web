@@ -1,141 +1,75 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
-import { AuthService } from '@/api/genzy-auth';
-import { setAccessToken, clearAccessToken, setUserInfo as saveUserInfo, clearUserInfo } from '@/lib/auth';
+import React, { useEffect, ReactNode, useRef } from 'react';
+import { useAuthActions } from '@/stores/auth-store';
+import { useUser, useIsAuthenticated, useIsLoading } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
-import { setupApiClient } from '@/lib/setup-api-client';
-
-interface User {
-   email: string;
-   fullName: string;
-   pictureUrl?: string | null;
-}
-
-interface AuthContextType {
-   user: User | null;
-   isAuthenticated: boolean;
-   isLoading: boolean;
-   login: (email: string, password: string) => Promise<void>;
-   logout: () => void;
-   refreshAuth: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export interface AuthProviderProps {
    children: ReactNode;
-   userInfo: any;
+   userInfo?: any;
 }
 
+/**
+ * AuthProvider - Initializes auth state from server-side data
+ * 
+ * This component is kept for backward compatibility and to handle
+ * initial server-side user data injection. The actual state management
+ * is now handled by Zustand store in @/stores/auth-store
+ */
 export function AuthProvider({ children, userInfo }: AuthProviderProps) {
-   const [user, setUser] = useState<User | null>(userInfo);
-   const [isAuthenticated, setIsAuthenticated] = useState(!!userInfo);
-   const [isLoading, setIsLoading] = useState(false);
-   const router = useRouter();
    const initialized = useRef(false);
+   const { initializeAuth } = useAuthActions();
 
    useEffect(() => {
       if (initialized.current) return;
       initialized.current = true;
 
+      // Initialize auth state with server-side user info
       if (userInfo) {
-         setUser(userInfo);
-         setIsAuthenticated(true);
+         initializeAuth(userInfo);
       }
-      setIsLoading(false);
-   }, []);
+   }, [userInfo, initializeAuth]);
 
+   return <>{children}</>;
+}
+
+/**
+ * useAuth hook - Access auth state and actions
+ * 
+ * This hook provides the same interface as before but now uses Zustand store.
+ * All components using useAuth will automatically re-render when auth state changes.
+ * 
+ * @example
+ * ```tsx
+ * const { user, isAuthenticated, login, logout } = useAuth();
+ * ```
+ */
+export function useAuth() {
+   const router = useRouter();
+   const user = useUser();
+   const isAuthenticated = useIsAuthenticated();
+   const isLoading = useIsLoading();
+   const { login: storeLogin, logout: storeLogout, refreshAuth } = useAuthActions();
+
+   // Wrap login to navigate after successful login
    const login = async (email: string, password: string) => {
-      try {
-         const response = await AuthService.postAuthLogin({
-            requestBody: { email, password },
-         });
-
-         await fetch('/api/auth/set-refresh', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ refreshToken: response.refreshToken }),
-         });
-
-         setAccessToken(response.token);
-         await setupApiClient(response.token);
-
-         const me = await AuthService.getAuthMe();
-         const profile = {
-            email: me?.email ?? '',
-            fullName: me?.name ?? '',
-            pictureUrl: me?.pictureUrl ?? undefined,
-         };
-         setUser(profile);
-         saveUserInfo(profile);
-         setIsAuthenticated(true);
-
-         router.push('/');
-      } catch (error) {
-         console.error('Login failed:', error);
-         throw error;
-      }
+      await storeLogin(email, password);
+      router.push('/');
    };
 
+   // Wrap logout to navigate to login page
    const logout = async () => {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      
-      clearAccessToken();
-      clearUserInfo();
-      setUser(null);
-      setIsAuthenticated(false);
+      await storeLogout();
       router.push('/login');
    };
 
-   const refreshAuth = async () => {
-      try {
-         const response = await fetch('/api/auth/refresh', { method: 'POST' });
-         
-         if (!response.ok) {
-            logout();
-            return;
-         }
-
-         const data = await response.json();
-         setAccessToken(data.accessToken);
-         await setupApiClient(data.accessToken);
-
-         const me = await AuthService.getAuthMe();
-         const profile = {
-            email: me?.email ?? '',
-            fullName: me?.name ?? '',
-            pictureUrl: me?.pictureUrl ?? undefined,
-         };
-         setUser(profile);
-         saveUserInfo(profile);
-         setIsAuthenticated(true);
-      } catch (error) {
-         console.error('Token refresh failed:', error);
-         logout();
-      }
+   return {
+      user,
+      isAuthenticated,
+      isLoading,
+      login,
+      logout,
+      refreshAuth,
    };
-
-   return (
-      <AuthContext.Provider
-         value={{
-            user,
-            isAuthenticated,
-            isLoading,
-            login,
-            logout,
-            refreshAuth,
-         }}
-      >
-         {children}
-      </AuthContext.Provider>
-   );
-}
-
-export function useAuth() {
-   const context = useContext(AuthContext);
-   if (context === undefined) {
-      throw new Error('useAuth must be used within an AuthProvider');
-   }
-   return context;
 }

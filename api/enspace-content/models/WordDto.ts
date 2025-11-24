@@ -3,11 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export type WordDto = {
-    id: number;
-    lessonId: number;
-    text: string;
-    meaningVi: string;
-    imageUrl: string | null;
-    examples: Array<string>;
+    id?: number;
+    lessonId?: number;
+    text?: string | null;
+    meaningVi?: string | null;
+    imageUrl?: string | null;
+    examples?: Array<string> | null;
 };
 

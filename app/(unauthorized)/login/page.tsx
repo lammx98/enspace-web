@@ -17,8 +17,8 @@ export default function LoginPage() {
    const router = useRouter();
 
    const handleGoogleLogin = () => {
-      const baseUrl = 'https://localhost:5001';
-      window.location.href = `${baseUrl}/auth/google-login?returnUrl=${window.location.origin}/auth/callback`;
+      const baseUrl = 'https://localhost:5443';
+      window.location.href = `${baseUrl}/api/v1/auth/google-login?returnUrl=${window.location.origin}/auth/callback`;
    };
 
    const handleLogin = async (e: React.FormEvent) => {

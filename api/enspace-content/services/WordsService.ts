@@ -2,79 +2,79 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApiResponseOfListOfWordDto } from '../models/ApiResponseOfListOfWordDto';
-import type { ApiResponseOfObject } from '../models/ApiResponseOfObject';
-import type { ApiResponseOfWordDto } from '../models/ApiResponseOfWordDto';
+import type { ObjectApiResponse } from '../models/ObjectApiResponse';
 import type { WordCreateRequest } from '../models/WordCreateRequest';
+import type { WordDtoApiResponse } from '../models/WordDtoApiResponse';
+import type { WordDtoListApiResponse } from '../models/WordDtoListApiResponse';
 import type { WordUpdateRequest } from '../models/WordUpdateRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class WordsService {
     /**
-     * @returns ApiResponseOfListOfWordDto OK
+     * @returns WordDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getApiWords({
+    public static getApiV1ContentWords({
         lessonId,
     }: {
         lessonId?: number,
-    }): CancelablePromise<ApiResponseOfListOfWordDto> {
+    }): CancelablePromise<WordDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/Words',
+            url: '/api/v1/content/words',
             query: {
                 'lessonId': lessonId,
             },
         });
     }
     /**
-     * @returns ApiResponseOfWordDto OK
+     * @returns WordDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiWords({
+    public static postApiV1ContentWords({
         requestBody,
     }: {
-        requestBody: WordCreateRequest,
-    }): CancelablePromise<ApiResponseOfWordDto> {
+        requestBody?: WordCreateRequest,
+    }): CancelablePromise<WordDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/Words',
+            url: '/api/v1/content/words',
             body: requestBody,
             mediaType: 'application/json',
         });
     }
     /**
-     * @returns ApiResponseOfWordDto OK
+     * @returns WordDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiWords1({
+    public static getApiV1ContentWords1({
         id,
     }: {
         id: number,
-    }): CancelablePromise<ApiResponseOfWordDto> {
+    }): CancelablePromise<WordDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/Words/{id}',
+            url: '/api/v1/content/words/{id}',
             path: {
                 'id': id,
             },
         });
     }
     /**
-     * @returns ApiResponseOfWordDto OK
+     * @returns WordDtoApiResponse OK
      * @throws ApiError
      */
-    public static putApiWords({
+    public static putApiV1ContentWords({
         id,
         requestBody,
     }: {
         id: number,
-        requestBody: WordUpdateRequest,
-    }): CancelablePromise<ApiResponseOfWordDto> {
+        requestBody?: WordUpdateRequest,
+    }): CancelablePromise<WordDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/Words/{id}',
+            url: '/api/v1/content/words/{id}',
             path: {
                 'id': id,
             },
@@ -83,17 +83,17 @@ export class WordsService {
         });
     }
     /**
-     * @returns ApiResponseOfObject OK
+     * @returns ObjectApiResponse OK
      * @throws ApiError
      */
-    public static deleteApiWords({
+    public static deleteApiV1ContentWords({
         id,
     }: {
         id: number,
-    }): CancelablePromise<ApiResponseOfObject> {
+    }): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/Words/{id}',
+            url: '/api/v1/content/words/{id}',
             path: {
                 'id': id,
             },

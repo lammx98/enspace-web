@@ -2,10 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ApiResponseOfObject = {
+import type { LessonDto } from './LessonDto';
+export type LessonDtoListApiResponse = {
     success?: boolean;
     message?: string | null;
-    result?: any;
+    result?: Array<LessonDto> | null;
     error?: any;
 };
 

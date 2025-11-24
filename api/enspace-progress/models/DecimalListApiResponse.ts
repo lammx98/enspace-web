@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ApiResponseOfListOfdecimal = {
+export type DecimalListApiResponse = {
     success?: boolean;
     message?: string | null;
     result?: Array<number> | null;

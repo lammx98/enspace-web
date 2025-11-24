@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 async function getUserInfo(accessToken: string) {
    try {
       await setupApiServer(accessToken);
-      const me = await AuthService.getAuthMe();
+      const me = await AuthService.getMe();
       return {
          email: me?.email ?? '',
          fullName: me?.name ?? '',
@@ -51,7 +51,7 @@ export default async function RootLayout({
    if (refreshToken) {
       try {
          await setupApiServer();
-         const tokenResponse = await AuthService.postAuthRefreshToken({
+         const tokenResponse = await AuthService.postRefreshToken({
             requestBody: refreshToken,
          });
          accessToken = tokenResponse.token;

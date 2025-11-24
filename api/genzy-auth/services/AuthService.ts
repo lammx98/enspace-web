@@ -14,14 +14,14 @@ export class AuthService {
      * @returns any OK
      * @throws ApiError
      */
-    public static getAuthGoogleLogin({
+    public static getGoogleLogin({
         returnUrl = '/',
     }: {
         returnUrl?: string,
     }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/auth/google-login',
+            url: '/google-login',
             query: {
                 'returnUrl': returnUrl,
             },
@@ -31,14 +31,14 @@ export class AuthService {
      * @returns any OK
      * @throws ApiError
      */
-    public static getAuthGoogleCallback({
+    public static getGoogleCallback({
         returnUrl = '/',
     }: {
         returnUrl?: string,
     }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/auth/google-callback',
+            url: '/google-callback',
             query: {
                 'returnUrl': returnUrl,
             },
@@ -48,24 +48,24 @@ export class AuthService {
      * @returns any OK
      * @throws ApiError
      */
-    public static getAuthMe(): CancelablePromise<any> {
+    public static getMe(): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/auth/me',
+            url: '/me',
         });
     }
     /**
      * @returns AuthResponse OK
      * @throws ApiError
      */
-    public static postAuthRegister({
+    public static postRegister({
         requestBody,
     }: {
-        requestBody: RegisterRequest,
+        requestBody?: RegisterRequest,
     }): CancelablePromise<AuthResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/auth/register',
+            url: '/register',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -74,14 +74,14 @@ export class AuthService {
      * @returns AuthResponse OK
      * @throws ApiError
      */
-    public static postAuthLogin({
+    public static postLogin({
         requestBody,
     }: {
-        requestBody: LoginRequest,
+        requestBody?: LoginRequest,
     }): CancelablePromise<AuthResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/auth/login',
+            url: '/login',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -90,14 +90,14 @@ export class AuthService {
      * @returns AuthResponse OK
      * @throws ApiError
      */
-    public static postAuthRefreshToken({
+    public static postRefreshToken({
         requestBody,
     }: {
-        requestBody: string,
+        requestBody?: string,
     }): CancelablePromise<AuthResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/auth/refresh-token',
+            url: '/refresh-token',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -106,14 +106,14 @@ export class AuthService {
      * @returns any OK
      * @throws ApiError
      */
-    public static postAuthRevokeToken({
+    public static postRevokeToken({
         requestBody,
     }: {
-        requestBody: string,
+        requestBody?: string,
     }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/auth/revoke-token',
+            url: '/revoke-token',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -122,14 +122,14 @@ export class AuthService {
      * @returns any OK
      * @throws ApiError
      */
-    public static postAuthLogout({
+    public static postLogout({
         requestBody,
     }: {
-        requestBody: string,
+        requestBody?: string,
     }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/auth/logout',
+            url: '/logout',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -138,14 +138,14 @@ export class AuthService {
      * @returns AuthResponse OK
      * @throws ApiError
      */
-    public static postAuthExternalLogin({
+    public static postExternalLogin({
         requestBody,
     }: {
-        requestBody: ExternalLoginRequest,
+        requestBody?: ExternalLoginRequest,
     }): CancelablePromise<AuthResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/auth/external-login',
+            url: '/external-login',
             body: requestBody,
             mediaType: 'application/json',
         });

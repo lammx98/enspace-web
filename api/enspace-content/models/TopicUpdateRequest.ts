@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TopicUpdateRequest = {
-    name: string;
-    description: string | null;
-    order: number;
+    name?: string | null;
+    description?: string | null;
+    order?: number;
 };
 

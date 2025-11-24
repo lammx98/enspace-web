@@ -2,4 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type DifficultyDto = number;
+export enum DifficultyDto {
+    '_1' = 1,
+    '_2' = 2,
+    '_3' = 3,
+}

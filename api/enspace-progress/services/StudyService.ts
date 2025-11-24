@@ -2,54 +2,54 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApiResponseOfListOfdecimal } from '../models/ApiResponseOfListOfdecimal';
-import type { ApiResponseOfUserWordProgressDto } from '../models/ApiResponseOfUserWordProgressDto';
+import type { DecimalListApiResponse } from '../models/DecimalListApiResponse';
 import type { LearnRequestDto } from '../models/LearnRequestDto';
 import type { ReviewRequestDto } from '../models/ReviewRequestDto';
+import type { UserWordProgressDtoApiResponse } from '../models/UserWordProgressDtoApiResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class StudyService {
     /**
-     * @returns ApiResponseOfUserWordProgressDto OK
+     * @returns UserWordProgressDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiStudyLearn({
+    public static postApiV1ProgressStudyLearn({
         requestBody,
     }: {
-        requestBody: LearnRequestDto,
-    }): CancelablePromise<ApiResponseOfUserWordProgressDto> {
+        requestBody?: LearnRequestDto,
+    }): CancelablePromise<UserWordProgressDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/Study/learn',
+            url: '/api/v1/progress/Study/learn',
             body: requestBody,
             mediaType: 'application/json',
         });
     }
     /**
-     * @returns ApiResponseOfUserWordProgressDto OK
+     * @returns UserWordProgressDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiStudyReview({
+    public static postApiV1ProgressStudyReview({
         requestBody,
     }: {
-        requestBody: ReviewRequestDto,
-    }): CancelablePromise<ApiResponseOfUserWordProgressDto> {
+        requestBody?: ReviewRequestDto,
+    }): CancelablePromise<UserWordProgressDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/Study/review',
+            url: '/api/v1/progress/Study/review',
             body: requestBody,
             mediaType: 'application/json',
         });
     }
     /**
-     * @returns ApiResponseOfListOfdecimal OK
+     * @returns DecimalListApiResponse OK
      * @throws ApiError
      */
-    public static getApiStudyDue(): CancelablePromise<ApiResponseOfListOfdecimal> {
+    public static getApiV1ProgressStudyDue(): CancelablePromise<DecimalListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/Study/due',
+            url: '/api/v1/progress/Study/due',
         });
     }
 }

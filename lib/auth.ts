@@ -13,23 +13,22 @@ export const AUTH_COOKIE_NAME = "auth_token";
 export const REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
 export const USER_INFO_COOKIE_NAME = "user_info";
 
-// In-memory stores (lost on full page reload; rely on refresh flow)
-let accessTokenMem: string | undefined;
-let userInfoMem:
-  | { email: string; fullName: string; pictureUrl?: string | null }
-  | undefined;
+const COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds
 
+const cookieOptions = {
+  maxAge: COOKIE_MAX_AGE,
+  path: "/",
+  sameSite: "lax" as const,
+};
+
+/**
+ * Save complete auth data from login/register response
+ * @deprecated Use Zustand store instead. This is kept for backward compatibility.
+ */
 export function saveAuthData(authResponse: AuthResponse) {
-  const expiresIn = 7; // 7 days
-  const cookieOptions = {
-    maxAge: expiresIn * 24 * 60 * 60,
-    path: "/",
-    sameSite: "lax" as const,
-  };
-
   setCookie(AUTH_COOKIE_NAME, authResponse.token, cookieOptions);
   setCookie(REFRESH_TOKEN_COOKIE_NAME, authResponse.refreshToken, cookieOptions);
-  // Backward-compatible: save user info if present in response
+  
   if (authResponse.email && authResponse.fullName) {
     setCookie(
       USER_INFO_COOKIE_NAME,
@@ -43,76 +42,65 @@ export function saveAuthData(authResponse: AuthResponse) {
   }
 }
 
+/**
+ * Save tokens to cookies
+ */
 export function saveTokens({ token, refreshToken }: { token: string; refreshToken: string }) {
-  const expiresIn = 7; // 7 days
-  const cookieOptions = {
-    maxAge: expiresIn * 24 * 60 * 60,
-    path: "/",
-    sameSite: "lax" as const,
-  };
   setCookie(AUTH_COOKIE_NAME, token, cookieOptions);
   setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieOptions);
 }
 
+/**
+ * Save user info to cookie
+ * @deprecated Use Zustand store instead
+ */
 export function saveUserInfo(user: { email: string; fullName: string; pictureUrl?: string | null }) {
-  const expiresIn = 7; // 7 days
-  const cookieOptions = {
-    maxAge: expiresIn * 24 * 60 * 60,
-    path: "/",
-    sameSite: "lax" as const,
-  };
   setCookie(USER_INFO_COOKIE_NAME, JSON.stringify(user), cookieOptions);
 }
 
+/**
+ * Clear all auth-related cookies
+ */
 export function clearAuthData() {
   deleteCookie(AUTH_COOKIE_NAME);
   deleteCookie(REFRESH_TOKEN_COOKIE_NAME);
   deleteCookie(USER_INFO_COOKIE_NAME);
-  clearAccessToken();
-  clearUserInfo();
 }
 
+/**
+ * Get auth token from cookie
+ */
 export function getAuthToken(): string | undefined {
   const token = getCookie(AUTH_COOKIE_NAME);
   return typeof token === 'string' ? token : undefined;
 }
 
-// Set access token in memory only
-export function setAccessToken(token: string) {
-  accessTokenMem = token;
+/**
+ * Get refresh token from cookie
+ */
+export function getRefreshToken(): string | undefined {
+  const token = getCookie(REFRESH_TOKEN_COOKIE_NAME);
+  return typeof token === 'string' ? token : undefined;
 }
 
-// Get access token (memory)
-export function getAccessToken(): string | undefined {
-  return accessTokenMem;
+/**
+ * Get user info from cookie
+ * @deprecated Use Zustand store instead
+ */
+export function getUserInfoFromCookie(): { email: string; fullName: string; pictureUrl?: string | null } | undefined {
+  const userInfo = getCookie(USER_INFO_COOKIE_NAME);
+  if (!userInfo || typeof userInfo !== 'string') return undefined;
+  
+  try {
+    return JSON.parse(userInfo);
+  } catch {
+    return undefined;
+  }
 }
 
-// Clear access token
-export function clearAccessToken() {
-  accessTokenMem = undefined;
-}
-
-// Set user info in memory
-export function setUserInfo(user: {
-  email: string;
-  fullName: string;
-  pictureUrl?: string | null;
-}) {
-  userInfoMem = user;
-}
-
-// Get user info from memory
-export function getUserInfo():
-  | { email: string; fullName: string; pictureUrl?: string | null }
-  | undefined {
-  return userInfoMem;
-}
-
-// Clear user info
-export function clearUserInfo() {
-  userInfoMem = undefined;
-}
-
+/**
+ * Check if a JWT token is expired
+ */
 export function isTokenExpired(token: string): boolean {
   try {
     const decoded = jwtDecode<JWTPayload>(token);
@@ -123,7 +111,70 @@ export function isTokenExpired(token: string): boolean {
   }
 }
 
-// Auth status (memory token only)
+/**
+ * Decode JWT token to get payload
+ */
+export function decodeToken(token: string): JWTPayload | null {
+  try {
+    return jwtDecode<JWTPayload>(token);
+  } catch {
+    return null;
+  }
+}
+
+// ============================================================
+// DEPRECATED: These functions are kept for backward compatibility
+// Use Zustand store from @/stores/auth-store instead
+// ============================================================
+
+/**
+ * @deprecated Use useAuthStore().setAccessToken() instead
+ */
+export function setAccessToken(token: string) {
+  console.warn('setAccessToken is deprecated. Use Zustand store instead.');
+}
+
+/**
+ * @deprecated Use useAuthStore().accessToken instead
+ */
+export function getAccessToken(): string | undefined {
+  console.warn('getAccessToken is deprecated. Use Zustand store instead.');
+  return undefined;
+}
+
+/**
+ * @deprecated Use useAuthStore().reset() instead
+ */
+export function clearAccessToken() {
+  console.warn('clearAccessToken is deprecated. Use Zustand store instead.');
+}
+
+/**
+ * @deprecated Use useAuthStore().setUser() instead
+ */
+export function setUserInfo(user: { email: string; fullName: string; pictureUrl?: string | null }) {
+  console.warn('setUserInfo is deprecated. Use Zustand store instead.');
+}
+
+/**
+ * @deprecated Use useAuthStore().user instead
+ */
+export function getUserInfo(): { email: string; fullName: string; pictureUrl?: string | null } | undefined {
+  console.warn('getUserInfo is deprecated. Use Zustand store instead.');
+  return undefined;
+}
+
+/**
+ * @deprecated Use useAuthStore().reset() instead
+ */
+export function clearUserInfo() {
+  console.warn('clearUserInfo is deprecated. Use Zustand store instead.');
+}
+
+/**
+ * @deprecated Use useAuthStore().isAuthenticated instead
+ */
 export function isAuthenticated(): boolean {
-  return !!accessTokenMem;
+  console.warn('isAuthenticated is deprecated. Use Zustand store instead.');
+  return false;
 }

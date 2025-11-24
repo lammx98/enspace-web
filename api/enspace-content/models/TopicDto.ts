@@ -3,11 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export type TopicDto = {
-    id: number;
-    name: string;
-    description: string | null;
-    order: number;
-    createdAt: string;
-    updatedAt: string;
+    id?: number;
+    name?: string | null;
+    description?: string | null;
+    order?: number;
+    createdAt?: string;
+    updatedAt?: string;
 };
 

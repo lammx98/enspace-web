@@ -2,79 +2,79 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApiResponseOfLessonDto } from '../models/ApiResponseOfLessonDto';
-import type { ApiResponseOfListOfLessonDto } from '../models/ApiResponseOfListOfLessonDto';
-import type { ApiResponseOfObject } from '../models/ApiResponseOfObject';
 import type { LessonCreateRequest } from '../models/LessonCreateRequest';
+import type { LessonDtoApiResponse } from '../models/LessonDtoApiResponse';
+import type { LessonDtoListApiResponse } from '../models/LessonDtoListApiResponse';
 import type { LessonUpdateRequest } from '../models/LessonUpdateRequest';
+import type { ObjectApiResponse } from '../models/ObjectApiResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class LessonsService {
     /**
-     * @returns ApiResponseOfListOfLessonDto OK
+     * @returns LessonDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getApiLessons({
+    public static getApiV1ContentLessons({
         topicId,
     }: {
         topicId?: number,
-    }): CancelablePromise<ApiResponseOfListOfLessonDto> {
+    }): CancelablePromise<LessonDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/Lessons',
+            url: '/api/v1/content/lessons',
             query: {
                 'topicId': topicId,
             },
         });
     }
     /**
-     * @returns ApiResponseOfLessonDto OK
+     * @returns LessonDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiLessons({
+    public static postApiV1ContentLessons({
         requestBody,
     }: {
-        requestBody: LessonCreateRequest,
-    }): CancelablePromise<ApiResponseOfLessonDto> {
+        requestBody?: LessonCreateRequest,
+    }): CancelablePromise<LessonDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/Lessons',
+            url: '/api/v1/content/lessons',
             body: requestBody,
             mediaType: 'application/json',
         });
     }
     /**
-     * @returns ApiResponseOfLessonDto OK
+     * @returns LessonDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiLessons1({
+    public static getApiV1ContentLessons1({
         id,
     }: {
         id: number,
-    }): CancelablePromise<ApiResponseOfLessonDto> {
+    }): CancelablePromise<LessonDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/Lessons/{id}',
+            url: '/api/v1/content/lessons/{id}',
             path: {
                 'id': id,
             },
         });
     }
     /**
-     * @returns ApiResponseOfLessonDto OK
+     * @returns LessonDtoApiResponse OK
      * @throws ApiError
      */
-    public static putApiLessons({
+    public static putApiV1ContentLessons({
         id,
         requestBody,
     }: {
         id: number,
-        requestBody: LessonUpdateRequest,
-    }): CancelablePromise<ApiResponseOfLessonDto> {
+        requestBody?: LessonUpdateRequest,
+    }): CancelablePromise<LessonDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/Lessons/{id}',
+            url: '/api/v1/content/lessons/{id}',
             path: {
                 'id': id,
             },
@@ -83,17 +83,17 @@ export class LessonsService {
         });
     }
     /**
-     * @returns ApiResponseOfObject OK
+     * @returns ObjectApiResponse OK
      * @throws ApiError
      */
-    public static deleteApiLessons({
+    public static deleteApiV1ContentLessons({
         id,
     }: {
         id: number,
-    }): CancelablePromise<ApiResponseOfObject> {
+    }): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/Lessons/{id}',
+            url: '/api/v1/content/lessons/{id}',
             path: {
                 'id': id,
             },

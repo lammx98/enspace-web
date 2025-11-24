@@ -2,72 +2,72 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApiResponseOfListOfTopicDto } from '../models/ApiResponseOfListOfTopicDto';
-import type { ApiResponseOfObject } from '../models/ApiResponseOfObject';
-import type { ApiResponseOfTopicDto } from '../models/ApiResponseOfTopicDto';
+import type { ObjectApiResponse } from '../models/ObjectApiResponse';
 import type { TopicCreateRequest } from '../models/TopicCreateRequest';
+import type { TopicDtoApiResponse } from '../models/TopicDtoApiResponse';
+import type { TopicDtoListApiResponse } from '../models/TopicDtoListApiResponse';
 import type { TopicUpdateRequest } from '../models/TopicUpdateRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class TopicsService {
     /**
-     * @returns ApiResponseOfListOfTopicDto OK
+     * @returns TopicDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getApiTopics(): CancelablePromise<ApiResponseOfListOfTopicDto> {
+    public static getApiV1ContentTopics(): CancelablePromise<TopicDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/Topics',
+            url: '/api/v1/content/topics',
         });
     }
     /**
-     * @returns ApiResponseOfTopicDto OK
+     * @returns TopicDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiTopics({
+    public static postApiV1ContentTopics({
         requestBody,
     }: {
-        requestBody: TopicCreateRequest,
-    }): CancelablePromise<ApiResponseOfTopicDto> {
+        requestBody?: TopicCreateRequest,
+    }): CancelablePromise<TopicDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/Topics',
+            url: '/api/v1/content/topics',
             body: requestBody,
             mediaType: 'application/json',
         });
     }
     /**
-     * @returns ApiResponseOfTopicDto OK
+     * @returns TopicDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiTopics1({
+    public static getApiV1ContentTopics1({
         id,
     }: {
         id: number,
-    }): CancelablePromise<ApiResponseOfTopicDto> {
+    }): CancelablePromise<TopicDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/Topics/{id}',
+            url: '/api/v1/content/topics/{id}',
             path: {
                 'id': id,
             },
         });
     }
     /**
-     * @returns ApiResponseOfTopicDto OK
+     * @returns TopicDtoApiResponse OK
      * @throws ApiError
      */
-    public static putApiTopics({
+    public static putApiV1ContentTopics({
         id,
         requestBody,
     }: {
         id: number,
-        requestBody: TopicUpdateRequest,
-    }): CancelablePromise<ApiResponseOfTopicDto> {
+        requestBody?: TopicUpdateRequest,
+    }): CancelablePromise<TopicDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/Topics/{id}',
+            url: '/api/v1/content/topics/{id}',
             path: {
                 'id': id,
             },
@@ -76,17 +76,17 @@ export class TopicsService {
         });
     }
     /**
-     * @returns ApiResponseOfObject OK
+     * @returns ObjectApiResponse OK
      * @throws ApiError
      */
-    public static deleteApiTopics({
+    public static deleteApiV1ContentTopics({
         id,
     }: {
         id: number,
-    }): CancelablePromise<ApiResponseOfObject> {
+    }): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/Topics/{id}',
+            url: '/api/v1/content/topics/{id}',
             path: {
                 'id': id,
             },
