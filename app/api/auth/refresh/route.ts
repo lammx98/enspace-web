@@ -1,32 +1,50 @@
 import { cookies } from 'next/headers';
-import { setupApiServer } from '@/lib/setup-api-server';
+import { NextResponse } from 'next/server';
 import { AuthService } from '@/api/genzy-auth';
 
 export async function POST() {
-  try {
-    const cookieStore = cookies();
-    const refreshToken = (await cookieStore).get('refresh_token')?.value;
+   try {
+      const cookieStore = await cookies();
+      const refreshToken = cookieStore.get('refresh_token')?.value;
 
-    if (!refreshToken) {
-      return Response.json({ error: 'No refresh token' }, { status: 401 });
-    }
+      if (!refreshToken) {
+         return NextResponse.json(
+            { error: 'No refresh token found' },
+            { status: 401 }
+         );
+      }
 
-    await setupApiServer();
-    const response = await AuthService.postAuthRefreshToken({
-      requestBody: refreshToken,
-    });
+      const tokenResponse = await AuthService.postRefreshToken({
+         requestBody: refreshToken,
+      });
 
-    // Update refresh token cookie
-    (await cookieStore).set('refresh_token', response.refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7,
-    });
+      // Lấy expires_at từ token
+      const payload = JSON.parse(atob(tokenResponse.token.split('.')[1]));
+      const expiresAt = payload.exp * 1000;
 
-    return Response.json({ accessToken: response.token });
-  } catch (error) {
-    return Response.json({ error: 'Refresh failed' }, { status: 401 });
-  }
+      // Update cookies
+      cookieStore.set('refresh_token', tokenResponse.refreshToken, {
+         httpOnly: true,
+         secure: process.env.NODE_ENV === 'production',
+         sameSite: 'strict',
+         maxAge: 7 * 24 * 60 * 60,
+      });
+      cookieStore.set('token_expires_at', expiresAt.toString(), {
+         httpOnly: true,
+         secure: process.env.NODE_ENV === 'production',
+         sameSite: 'strict',
+         maxAge: 7 * 24 * 60 * 60,
+      });
+
+      return NextResponse.json({
+         accessToken: tokenResponse.token,
+         expiresAt,
+      });
+   } catch (error) {
+      console.error('Token refresh failed:', error);
+      return NextResponse.json(
+         { error: 'Token refresh failed' },
+         { status: 401 }
+      );
+   }
 }

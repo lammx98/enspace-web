@@ -15,14 +15,14 @@ export class WordsService {
      * @returns WordDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getApiV1ContentWords({
+    public static getWords({
         lessonId,
     }: {
         lessonId?: number,
     }): CancelablePromise<WordDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/content/words',
+            url: '/words',
             query: {
                 'lessonId': lessonId,
             },
@@ -32,14 +32,14 @@ export class WordsService {
      * @returns WordDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiV1ContentWords({
+    public static postWords({
         requestBody,
     }: {
         requestBody?: WordCreateRequest,
     }): CancelablePromise<WordDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/content/words',
+            url: '/words',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -48,14 +48,14 @@ export class WordsService {
      * @returns WordDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiV1ContentWords1({
+    public static getWords1({
         id,
     }: {
         id: number,
     }): CancelablePromise<WordDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/content/words/{id}',
+            url: '/words/{id}',
             path: {
                 'id': id,
             },
@@ -65,7 +65,7 @@ export class WordsService {
      * @returns WordDtoApiResponse OK
      * @throws ApiError
      */
-    public static putApiV1ContentWords({
+    public static putWords({
         id,
         requestBody,
     }: {
@@ -74,7 +74,7 @@ export class WordsService {
     }): CancelablePromise<WordDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/v1/content/words/{id}',
+            url: '/words/{id}',
             path: {
                 'id': id,
             },
@@ -86,14 +86,14 @@ export class WordsService {
      * @returns ObjectApiResponse OK
      * @throws ApiError
      */
-    public static deleteApiV1ContentWords({
+    public static deleteWords({
         id,
     }: {
         id: number,
     }): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/v1/content/words/{id}',
+            url: '/words/{id}',
             path: {
                 'id': id,
             },

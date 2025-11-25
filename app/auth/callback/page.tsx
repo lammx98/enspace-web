@@ -2,8 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { setAccessToken } from '@/lib/auth';
-import { setupApiClient } from '@/lib/setup-api-client';
+import { setupApiClientToken } from '@/lib/setup-api-client';
 import { AuthService } from '@/api/genzy-auth';
 
 export default function GoogleCallback() {
@@ -29,12 +28,11 @@ export default function GoogleCallback() {
                }
 
                // Store access token in memory
-               setAccessToken(token);
-               await setupApiClient(token);
+               setupApiClientToken(token);
 
                // Fetch user profile
                try {
-                  const me = await AuthService.getAuthMe();
+                  const me = await AuthService.getMe();
                } catch (err) {
                   console.error('Failed to fetch user profile:', err);
                   router.push('/login');

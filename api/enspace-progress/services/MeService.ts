@@ -11,10 +11,10 @@ export class MeService {
      * @returns StatsDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiV1ProgressMeStats(): CancelablePromise<StatsDtoApiResponse> {
+    public static getMeStats(): CancelablePromise<StatsDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/progress/Me/stats',
+            url: '/Me/stats',
         });
     }
 }

@@ -35,7 +35,7 @@ export function saveAuthData(authResponse: AuthResponse) {
       JSON.stringify({
         email: authResponse.email,
         fullName: authResponse.fullName,
-        pictureUrl: authResponse.pictureUrl,
+        avatarUrl: authResponse.avatarUrl,
       }),
       cookieOptions
     );
@@ -54,7 +54,7 @@ export function saveTokens({ token, refreshToken }: { token: string; refreshToke
  * Save user info to cookie
  * @deprecated Use Zustand store instead
  */
-export function saveUserInfo(user: { email: string; fullName: string; pictureUrl?: string | null }) {
+export function saveUserInfo(user: { email: string; fullName: string; avatarUrl?: string | null }) {
   setCookie(USER_INFO_COOKIE_NAME, JSON.stringify(user), cookieOptions);
 }
 
@@ -87,7 +87,7 @@ export function getRefreshToken(): string | undefined {
  * Get user info from cookie
  * @deprecated Use Zustand store instead
  */
-export function getUserInfoFromCookie(): { email: string; fullName: string; pictureUrl?: string | null } | undefined {
+export function getUserInfoFromCookie(): { email: string; fullName: string; avatarUrl?: string | null } | undefined {
   const userInfo = getCookie(USER_INFO_COOKIE_NAME);
   if (!userInfo || typeof userInfo !== 'string') return undefined;
   
@@ -152,14 +152,14 @@ export function clearAccessToken() {
 /**
  * @deprecated Use useAuthStore().setUser() instead
  */
-export function setUserInfo(user: { email: string; fullName: string; pictureUrl?: string | null }) {
+export function setUserInfo(user: { email: string; fullName: string; avatarUrl?: string | null }) {
   console.warn('setUserInfo is deprecated. Use Zustand store instead.');
 }
 
 /**
  * @deprecated Use useAuthStore().user instead
  */
-export function getUserInfo(): { email: string; fullName: string; pictureUrl?: string | null } | undefined {
+export function getUserInfo(): { email: string; fullName: string; avatarUrl?: string | null } | undefined {
   console.warn('getUserInfo is deprecated. Use Zustand store instead.');
   return undefined;
 }

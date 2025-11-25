@@ -67,7 +67,7 @@ export function TopicSelection({ onSelectTopic }: TopicSelectionProps) {
 
    const fetchTopics = async () => {
       try {
-         const response = await TopicsService.getApiTopics();
+         const response = await TopicsService.getTopics();
          if (response.result) {
             // Map API data to UI format
             const mappedTopics = response.result.map((topic, index) => ({

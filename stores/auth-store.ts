@@ -1,32 +1,28 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { AuthService, AuthResponse } from '@/api/genzy-auth';
+import { AuthService, AuthResponse, AccountDTO } from '@/api/genzy-auth';
 import { setupApiClient } from '@/lib/api-setup';
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
-
-export interface User {
-   email: string;
-   fullName: string;
-   pictureUrl?: string | null;
-}
+import { setupApiClientToken } from '@/lib/setup-api-client';
 
 interface AuthState {
    // State
-   user: User | null;
+   user: AccountDTO | null;
    accessToken: string | null;
    isAuthenticated: boolean;
    isLoading: boolean;
 
    // Actions
-   setUser: (user: User | null) => void;
+   setUser: (user: AccountDTO | null) => void;
    setAccessToken: (token: string | null) => void;
    setLoading: (loading: boolean) => void;
 
    // Auth operations
+   setRefreshToken: (refreshToken: string, expiresAt: number) => Promise<void>;
    login: (email: string, password: string) => Promise<void>;
    logout: () => Promise<void>;
    refreshAuth: () => Promise<void>;
-   initializeAuth: (userInfo?: User) => void;
+   initializeAuth: (userInfo?: AccountDTO) => void;
 
    // Helper
    reset: () => void;
@@ -41,6 +37,16 @@ const initialState = {
    isAuthenticated: false,
    isLoading: true,
 };
+
+// Helper để lấy expiresAt từ token
+function getTokenExpiresAt(token: string): number {
+   try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp * 1000; // Convert to milliseconds
+   } catch {
+      return 0;
+   }
+}
 
 export const useAuthStore = create<AuthState>()(
    persist(
@@ -65,6 +71,15 @@ export const useAuthStore = create<AuthState>()(
             }
          },
 
+         setRefreshToken: async (refreshToken: string, expiresAt: number) => {
+            // Save refresh token và expires_at to HTTP-only cookie via API
+            await fetch('/api/auth/set-refresh', {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ refreshToken, expiresAt }),
+            });
+         },
+
          login: async (email: string, password: string) => {
             try {
                set({ isLoading: true });
@@ -73,27 +88,21 @@ export const useAuthStore = create<AuthState>()(
                   requestBody: { email, password },
                });
 
-               // Save refresh token to HTTP-only cookie via API
-               await fetch('/api/auth/set-refresh', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ refreshToken: response.refreshToken }),
-               });
+               // Lấy expires_at từ token
+               const expiresAt = getTokenExpiresAt(response.token);
+
+               // Save refresh token và expires_at to HTTP-only cookie via API
+               await get().setRefreshToken(response.refreshToken, expiresAt);
 
                // Setup API clients with new token
-               await setupApiClient(response.token);
+               setupApiClientToken(response.token);
 
                // Get user profile
-               const me = await AuthService.getMe();
-               const profile: User = {
-                  email: me?.email ?? '',
-                  fullName: me?.name ?? '',
-                  pictureUrl: me?.pictureUrl ?? undefined,
-               };
+               const me = (await AuthService.getMe()).result;
 
                // Update store
                set({
-                  user: profile,
+                  user: me,
                   accessToken: response.token,
                   isAuthenticated: true,
                   isLoading: false,
@@ -115,6 +124,7 @@ export const useAuthStore = create<AuthState>()(
                // Clear cookies
                deleteCookie(AUTH_COOKIE_NAME);
                deleteCookie(REFRESH_TOKEN_COOKIE_NAME);
+               deleteCookie('token_expires_at');
 
                // Reset store
                set({
@@ -139,19 +149,14 @@ export const useAuthStore = create<AuthState>()(
                const data = await response.json();
 
                // Setup API clients with new token
-               await setupApiClient(data.accessToken);
+               setupApiClientToken(data.accessToken);
 
                // Get user profile
-               const me = await AuthService.getMe();
-               const profile: User = {
-                  email: me?.email ?? '',
-                  fullName: me?.name ?? '',
-                  pictureUrl: me?.pictureUrl ?? undefined,
-               };
+               const me = (await AuthService.getMe()).result;
 
                // Update store
                set({
-                  user: profile,
+                  user: me,
                   accessToken: data.accessToken,
                   isAuthenticated: true,
                   isLoading: false,
@@ -188,15 +193,3 @@ export const useAuthStore = create<AuthState>()(
       },
    ),
 );
-
-// Action selectors (safe to use directly as they don't cause hydration issues)
-export const useAuthActions = () =>
-   useAuthStore((state) => ({
-      login: state.login,
-      logout: state.logout,
-      refreshAuth: state.refreshAuth,
-      initializeAuth: state.initializeAuth,
-   }));
-
-// Note: For state selectors (user, isAuthenticated, etc.), 
-// use hydration-safe hooks from '@/hooks/use-auth' instead of accessing store directly

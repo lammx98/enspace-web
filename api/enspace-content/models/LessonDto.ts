@@ -6,7 +6,7 @@ import type { DifficultyDto } from './DifficultyDto';
 export type LessonDto = {
     id?: number;
     topicId?: number;
-    title?: string | null;
+    title?: string;
     difficulty?: DifficultyDto;
     order?: number;
 };

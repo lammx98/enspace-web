@@ -14,14 +14,14 @@ export class StudyService {
      * @returns UserWordProgressDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiV1ProgressStudyLearn({
+    public static postStudyLearn({
         requestBody,
     }: {
         requestBody?: LearnRequestDto,
     }): CancelablePromise<UserWordProgressDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/progress/Study/learn',
+            url: '/Study/learn',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -30,14 +30,14 @@ export class StudyService {
      * @returns UserWordProgressDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiV1ProgressStudyReview({
+    public static postStudyReview({
         requestBody,
     }: {
         requestBody?: ReviewRequestDto,
     }): CancelablePromise<UserWordProgressDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/progress/Study/review',
+            url: '/Study/review',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -46,10 +46,10 @@ export class StudyService {
      * @returns DecimalListApiResponse OK
      * @throws ApiError
      */
-    public static getApiV1ProgressStudyDue(): CancelablePromise<DecimalListApiResponse> {
+    public static getStudyDue(): CancelablePromise<DecimalListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/progress/Study/due',
+            url: '/Study/due',
         });
     }
 }

@@ -5,7 +5,7 @@
 import type { DifficultyDto } from './DifficultyDto';
 export type LessonCreateRequest = {
     topicId?: number;
-    title?: string | null;
+    title?: string;
     difficulty?: DifficultyDto;
     order?: number;
 };

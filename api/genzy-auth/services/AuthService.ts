@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AccountDTOApiResponse } from '../models/AccountDTOApiResponse';
 import type { AuthResponse } from '../models/AuthResponse';
 import type { ExternalLoginRequest } from '../models/ExternalLoginRequest';
 import type { LoginRequest } from '../models/LoginRequest';
@@ -45,10 +46,10 @@ export class AuthService {
         });
     }
     /**
-     * @returns any OK
+     * @returns AccountDTOApiResponse OK
      * @throws ApiError
      */
-    public static getMe(): CancelablePromise<any> {
+    public static getMe(): CancelablePromise<AccountDTOApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/me',

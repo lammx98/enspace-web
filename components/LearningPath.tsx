@@ -32,7 +32,7 @@ export function LearningPath({ topicId, onStartLesson, onBack }: LearningPathPro
 
    const fetchLessons = async () => {
       try {
-         const response = await LessonsService.getApiLessons({
+         const response = await LessonsService.getLessons({
             topicId: parseInt(topicId),
          });
          

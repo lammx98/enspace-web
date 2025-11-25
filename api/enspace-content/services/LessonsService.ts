@@ -15,14 +15,14 @@ export class LessonsService {
      * @returns LessonDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getApiV1ContentLessons({
+    public static getLessons({
         topicId,
     }: {
         topicId?: number,
     }): CancelablePromise<LessonDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/content/lessons',
+            url: '/lessons',
             query: {
                 'topicId': topicId,
             },
@@ -32,14 +32,14 @@ export class LessonsService {
      * @returns LessonDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiV1ContentLessons({
+    public static postLessons({
         requestBody,
     }: {
         requestBody?: LessonCreateRequest,
     }): CancelablePromise<LessonDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/content/lessons',
+            url: '/lessons',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -48,14 +48,14 @@ export class LessonsService {
      * @returns LessonDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiV1ContentLessons1({
+    public static getLessons1({
         id,
     }: {
         id: number,
     }): CancelablePromise<LessonDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/content/lessons/{id}',
+            url: '/lessons/{id}',
             path: {
                 'id': id,
             },
@@ -65,7 +65,7 @@ export class LessonsService {
      * @returns LessonDtoApiResponse OK
      * @throws ApiError
      */
-    public static putApiV1ContentLessons({
+    public static putLessons({
         id,
         requestBody,
     }: {
@@ -74,7 +74,7 @@ export class LessonsService {
     }): CancelablePromise<LessonDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/v1/content/lessons/{id}',
+            url: '/lessons/{id}',
             path: {
                 'id': id,
             },
@@ -86,14 +86,14 @@ export class LessonsService {
      * @returns ObjectApiResponse OK
      * @throws ApiError
      */
-    public static deleteApiV1ContentLessons({
+    public static deleteLessons({
         id,
     }: {
         id: number,
     }): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/v1/content/lessons/{id}',
+            url: '/lessons/{id}',
             path: {
                 'id': id,
             },

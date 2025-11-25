@@ -45,7 +45,7 @@ export function QuizGame({ lessonId, onExit, onComplete }: QuizGameProps) {
 
   const fetchWords = async () => {
     try {
-      const response = await WordsService.getApiWords({
+      const response = await WordsService.getWords({
         lessonId: lessonId,
       });
 
@@ -62,11 +62,11 @@ export function QuizGame({ lessonId, onExit, onComplete }: QuizGameProps) {
 
           return {
             id: index + 1,
-            wordId: word.id,
+            wordId: word.id!,
             question: `What does "${word.text}" mean?`,
             options,
             correctAnswer: correctIndex,
-            explanation: `${word.text} means "${word.meaningVi}". ${word.examples[0] || ''}`,
+            explanation: `${word.text} means "${word.meaningVi}". ${word?.examples?.[0] || ''}`,
           };
         });
 
@@ -156,7 +156,7 @@ export function QuizGame({ lessonId, onExit, onComplete }: QuizGameProps) {
       // Track progress via API
       if (questions[currentQuestion].wordId) {
         try {
-          await StudyService.postApiStudyLearn({
+          await StudyService.postStudyLearn({
             requestBody: {
               wordId: questions[currentQuestion].wordId,
             },
@@ -171,7 +171,7 @@ export function QuizGame({ lessonId, onExit, onComplete }: QuizGameProps) {
       // Track incorrect answer (still track to update statistics)
       if (questions[currentQuestion].wordId) {
         try {
-          await StudyService.postApiStudyLearn({
+          await StudyService.postStudyLearn({
             requestBody: {
               wordId: questions[currentQuestion].wordId,
             },

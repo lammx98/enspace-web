@@ -5,9 +5,9 @@
 export type WordDto = {
     id?: number;
     lessonId?: number;
-    text?: string | null;
-    meaningVi?: string | null;
+    text?: string;
+    meaningVi?: string;
     imageUrl?: string | null;
-    examples?: Array<string> | null;
+    examples?: Array<string>;
 };
 

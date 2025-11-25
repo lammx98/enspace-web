@@ -21,7 +21,7 @@
  */
 
 // Re-export client setup
-export { setupApiClient, resetApiClient, getToken, clientGet } from './setup-api-client';
+export { setupApiClient, resetApiClient } from './setup-api-client';
 
 // Re-export server setup
 export { setupApiServer, resetApiServer } from './setup-api-server';
@@ -33,19 +33,3 @@ export { API_CONFIG, getServiceBaseUrl, validateApiConfig, isDevelopment } from 
 export { OpenAPI as AuthOpenAPI } from '@/api/genzy-auth';
 export { OpenAPI as ContentOpenAPI } from '@/api/enspace-content';
 export { OpenAPI as ProgressOpenAPI } from '@/api/enspace-progress';
-
-/**
- * Initialize API based on environment
- * Automatically detects if running on client or server
- */
-export async function setupApi(token?: string) {
-   if (typeof window !== 'undefined') {
-      // Client-side
-      const { setupApiClient } = await import('./setup-api-client');
-      return setupApiClient(token);
-   } else {
-      // Server-side
-      const { setupApiServer } = await import('./setup-api-server');
-      return setupApiServer(token);
-   }
-}

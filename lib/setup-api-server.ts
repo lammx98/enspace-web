@@ -8,16 +8,15 @@ import type { OpenAPIConfig } from '@/api/genzy-auth/core/OpenAPI';
 /**
  * Setup API configuration for server-side requests
  * This should be called in Server Components, API Routes, and Server Actions
- * 
+ *
  * @param token - Optional authentication token
  */
-export async function setupApiServer(token?: string) {
+export async function setupApiServer() {
    // Create HTTPS agent for development with self-signed certificates
    const httpsAgent = isDevelopment ? new https.Agent({ rejectUnauthorized: false }) : undefined;
 
    // Common configuration
    const commonConfig: Partial<OpenAPIConfig> = {
-      ...(token && { TOKEN: token }),
       ...(httpsAgent && { HEADERS: async () => ({ httpsAgent } as any) }),
    };
 
@@ -35,11 +34,28 @@ export async function setupApiServer(token?: string) {
 }
 
 /**
+ * Setup API configuration for server-side requests
+ * This should be called in Server Components, API Routes, and Server Actions
+ *
+ * @param token - Optional authentication token
+ */
+export async function setupApiServerToken(token: string) {
+   // Setup Auth API
+   AuthOpenAPI.TOKEN = token;
+
+   // Setup Content API
+   ContentOpenAPI.TOKEN = token;
+
+   // Setup Progress API
+   ProgressOpenAPI.TOKEN = token;
+}
+
+/**
  * Reset all API configurations
  * Useful for testing or cleaning up
  */
 export function resetApiServer() {
-   [AuthOpenAPI, ContentOpenAPI, ProgressOpenAPI].forEach(api => {
+   [AuthOpenAPI, ContentOpenAPI, ProgressOpenAPI].forEach((api) => {
       api.TOKEN = undefined;
       api.HEADERS = undefined;
    });

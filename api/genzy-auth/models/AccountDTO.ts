@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type AuthResponse = {
-    token: string;
-    refreshToken: string;
+export type AccountDTO = {
+    id?: number | null;
+    userName: string;
     email: string;
-    fullName: string;
+    fullName?: string | null;
     avatarUrl?: string | null;
 };
 

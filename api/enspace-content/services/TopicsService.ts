@@ -15,24 +15,24 @@ export class TopicsService {
      * @returns TopicDtoListApiResponse OK
      * @throws ApiError
      */
-    public static getApiV1ContentTopics(): CancelablePromise<TopicDtoListApiResponse> {
+    public static getTopics(): CancelablePromise<TopicDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/content/topics',
+            url: '/topics',
         });
     }
     /**
      * @returns TopicDtoApiResponse OK
      * @throws ApiError
      */
-    public static postApiV1ContentTopics({
+    public static postTopics({
         requestBody,
     }: {
         requestBody?: TopicCreateRequest,
     }): CancelablePromise<TopicDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/content/topics',
+            url: '/topics',
             body: requestBody,
             mediaType: 'application/json',
         });
@@ -41,14 +41,14 @@ export class TopicsService {
      * @returns TopicDtoApiResponse OK
      * @throws ApiError
      */
-    public static getApiV1ContentTopics1({
+    public static getTopics1({
         id,
     }: {
         id: number,
     }): CancelablePromise<TopicDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/content/topics/{id}',
+            url: '/topics/{id}',
             path: {
                 'id': id,
             },
@@ -58,7 +58,7 @@ export class TopicsService {
      * @returns TopicDtoApiResponse OK
      * @throws ApiError
      */
-    public static putApiV1ContentTopics({
+    public static putTopics({
         id,
         requestBody,
     }: {
@@ -67,7 +67,7 @@ export class TopicsService {
     }): CancelablePromise<TopicDtoApiResponse> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/v1/content/topics/{id}',
+            url: '/topics/{id}',
             path: {
                 'id': id,
             },
@@ -79,14 +79,14 @@ export class TopicsService {
      * @returns ObjectApiResponse OK
      * @throws ApiError
      */
-    public static deleteApiV1ContentTopics({
+    public static deleteTopics({
         id,
     }: {
         id: number,
     }): CancelablePromise<ObjectApiResponse> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/v1/content/topics/{id}',
+            url: '/topics/{id}',
             path: {
                 'id': id,
             },

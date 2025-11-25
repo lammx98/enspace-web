@@ -1,20 +1,30 @@
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-export async function POST(req: Request) {
-  try {
-    const { refreshToken } = await req.json();
-    if (!refreshToken) return new Response('Missing refreshToken', { status: 400 });
+export async function POST(request: Request) {
+   try {
+      const { refreshToken, expiresAt } = await request.json();
+      const cookieStore = await cookies();
 
-    (await cookies()).set('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
+      cookieStore.set('refresh_token', refreshToken, {
+         httpOnly: true,
+         secure: process.env.NODE_ENV === 'production',
+         sameSite: 'strict',
+         maxAge: 7 * 24 * 60 * 60, // 7 days
+      });
 
-    return new Response(null, { status: 204 });
-  } catch {
-    return new Response('Bad Request', { status: 400 });
-  }
+      // Lưu expires_at của access token
+      if (expiresAt) {
+         cookieStore.set('token_expires_at', expiresAt.toString(), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60, // 7 days
+         });
+      }
+
+      return NextResponse.json({ success: true });
+   } catch (error) {
+      return NextResponse.json({ error: 'Failed to set refresh token' }, { status: 500 });
+   }
 }
