@@ -37,7 +37,7 @@ export default async function AuthorizedLayout({
    // Kiểm tra xem token có hết hạn không (thêm buffer 1 phút)
    const now = Date.now();
    const expiresAt = tokenExpiresAt ? parseInt(tokenExpiresAt) : 0;
-   const isExpired = expiresAt === 0 || now >= (expiresAt - 60000); // 1 minute buffer
+   const isExpired = expiresAt === 0 || now >= expiresAt - 60000; // 1 minute buffer
 
    if (isExpired) {
       try {
@@ -45,11 +45,11 @@ export default async function AuthorizedLayout({
             requestBody: refreshToken,
          });
          accessToken = tokenResponse.token;
-         
+
          // Lấy expires_at mới từ token
          const payload = JSON.parse(atob(accessToken.split('.')[1]));
          const newExpiresAt = payload.exp * 1000;
-         
+
          // Update cookies
          cookieStore.set('refresh_token', tokenResponse.refreshToken, {
             httpOnly: true,
@@ -68,7 +68,7 @@ export default async function AuthorizedLayout({
          userInfo = await getUserInfo();
       } catch (error) {
          console.error('Token refresh failed:', error);
-         redirect('/login');
+         // redirect('/login'); // TODO: uncomment this
       }
    }
 

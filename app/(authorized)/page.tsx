@@ -15,9 +15,9 @@ export default function HomePage() {
    // Topic Selection Screen (Home)
    return (
       <div className="min-h-screen bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400 overflow-hidden">
-         <GameHeader
+         {/* <GameHeader
             onLeaderboardClick={() => setShowLeaderboard(!showLeaderboard)}
-         />
+         /> */}
 
          <div className="flex gap-6 max-w-7xl mx-auto px-4 py-6">
             <div className="flex-1">

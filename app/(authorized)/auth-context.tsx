@@ -51,7 +51,7 @@ export function AuthProvider({ children, userInfo, accessToken }: AuthProviderPr
       if (!isPublicRoute && !accessToken) {
          // Clear invalid refresh token cookie
          fetch('/api/auth/logout', { method: 'POST' }).catch(console.error);
-         router.push('/login');
+         // redirect('/login'); // TODO: uncomment this
       }
    }, []);
 
