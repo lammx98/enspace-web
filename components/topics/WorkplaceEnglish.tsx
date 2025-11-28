@@ -4,7 +4,7 @@ import { TopicCardProps } from './TopicCard';
 
 const WorkplaceEnglish: React.FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-slate-200 via-gray-200 to-blue-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-slate-200 via-gray-200 to-blue-200`}>
          <motion.div animate={{ rotate: 360 }} transition={{ duration: 15, repeat: Infinity, ease: 'linear' }} className="absolute top-3 left-3">
             <Clock className="w-6 h-6 text-blue-500 opacity-60" />
          </motion.div>

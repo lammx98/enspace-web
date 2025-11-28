@@ -5,7 +5,7 @@ import { FC } from 'react';
 
 const Accommodation: FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-amber-200 via-yellow-200 to-orange-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-amber-200 via-yellow-200 to-orange-200`}>
          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-amber-400 to-amber-300"></div>
          <div className="flex items-end justify-center h-full pb-8">
             <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}>

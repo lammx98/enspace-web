@@ -5,7 +5,7 @@ import { FC } from 'react';
 
 const DailyConversation: FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-amber-200 via-orange-200 to-pink-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-amber-200 via-orange-200 to-pink-200`}>
          <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }} className="absolute top-2 left-2">
             <Star className="w-6 h-6 text-yellow-400 fill-yellow-400 opacity-60" />
          </motion.div>

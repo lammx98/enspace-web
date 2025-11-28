@@ -10,7 +10,7 @@ import { TopicCardProps } from './TopicCard';
 
 const FamilyRelationships: React.FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-rose-200 via-pink-200 to-fuchsia-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-rose-200 via-pink-200 to-fuchsia-200`}>
          <motion.div
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}

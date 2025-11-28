@@ -4,7 +4,7 @@ import { TopicCardProps } from './TopicCard';
 
 const EducationSchool: React.FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-indigo-200 via-purple-200 to-violet-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-indigo-200 via-purple-200 to-violet-200`}>
          <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className="absolute top-2 right-4">
             <GraduationCap className="w-10 h-10 text-indigo-600" />
          </motion.div>

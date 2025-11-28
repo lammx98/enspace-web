@@ -123,13 +123,15 @@ export function TopicCard({ topic, index }: TopicProps) {
          initial={{ opacity: 0, y: 20 }}
          animate={{ opacity: 1, y: 0 }}
          // transition={{ duration: 0.5, delay: index * 0.05 }}
-         className="w-full aspect-[2/3] bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer"
+         className="w-full h-[350px] bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer"
          whileHover={{ scale: 1.05, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
       >
-         return <Comp index={index} />;{/* Content Section */}
+         <Comp index={index} />
+
+         {/* Content Section */}
          <div className="p-4 flex flex-col justify-between h-[40%]">
             <div>
-               <h3 className="text-indigo-900 mb-1">{topic.name}</h3>
+               <h3 className="mb-1 font-semibold bg-gradient-to-r from-indigo-900 to-pink-900 bg-clip-text text-transparent">{topic.name}</h3>
                <p className="text-gray-600 text-sm">{topic.description}</p>
             </div>
 

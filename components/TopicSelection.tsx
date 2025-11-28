@@ -6,11 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { TopicsService, TopicDto } from '@/api/enspace-content';
 
-interface TopicSelectionProps {
-   onSelectTopic: (topicId: string) => void;
-}
+interface TopicSelectionProps {}
 
-export function TopicSelection({ onSelectTopic }: TopicSelectionProps) {
+export function TopicSelection() {
    const router = useRouter();
    const setActiveTopic = useAppStore((s) => s.setActiveTopic);
    const [topics, setTopics] = useState<TopicDto[]>([]);

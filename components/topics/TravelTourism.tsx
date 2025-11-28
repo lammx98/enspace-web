@@ -4,7 +4,7 @@ import { TopicCardProps } from './TopicCard';
 
 const TravelTourism: React.FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-sky-200 via-blue-200 to-cyan-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-sky-200 via-blue-200 to-cyan-200`}>
          <motion.div animate={{ x: [-20, 220], y: [20, 80] }} transition={{ duration: 8, repeat: Infinity, ease: 'linear' }} className="absolute">
             <Plane className="w-12 h-12 text-sky-600 rotate-45" />
          </motion.div>

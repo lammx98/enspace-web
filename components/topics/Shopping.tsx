@@ -4,7 +4,7 @@ import { TopicCardProps } from './TopicCard';
 
 const Shopping: React.FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-pink-200 via-rose-200 to-red-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-pink-200 via-rose-200 to-red-200`}>
          <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }} className="absolute top-2 right-8">
             <Star className="w-5 h-5 text-yellow-400 fill-yellow-400 opacity-60" />
          </motion.div>

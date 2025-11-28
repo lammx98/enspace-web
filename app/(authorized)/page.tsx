@@ -1,9 +1,10 @@
-"use client";
-import { TopicSelection } from "@/components/TopicSelection";
-import { StreakModal } from "@/components/StreakModal";
-import { LeaderboardPanel } from "@/components/LeaderboardPanel";
-import { useState } from "react";
-import { GameHeader } from "@/components/GameHeader";
+'use client';
+import { TopicSelection } from '@/components/TopicSelection';
+import { StreakModal } from '@/components/StreakModal';
+import { LeaderboardPanel } from '@/components/LeaderboardPanel';
+import { useState } from 'react';
+import { GameHeader } from '@/components/GameHeader';
+import TopicList from '@/components/topics/TopicList';
 
 export default function HomePage() {
    const [showLeaderboard, setShowLeaderboard] = useState(false);
@@ -14,14 +15,14 @@ export default function HomePage() {
 
    // Topic Selection Screen (Home)
    return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400 overflow-hidden">
+      <div className="min-h-screen bg-accent overflow-hidden">
          {/* <GameHeader
             onLeaderboardClick={() => setShowLeaderboard(!showLeaderboard)}
          /> */}
 
-         <div className="flex gap-6 max-w-7xl mx-auto px-4 py-6">
+         <div className="flex gap-6 max-w-5xl mx-auto px-4 py-6">
             <div className="flex-1">
-               <TopicSelection onSelectTopic={handleSelectTopic} />
+               <TopicList />
             </div>
 
             {showLeaderboard && (

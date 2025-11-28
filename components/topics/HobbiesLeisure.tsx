@@ -4,7 +4,7 @@ import { TopicCardProps } from './TopicCard';
 
 const HobbiesLeisure: React.FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-violet-200 via-purple-200 to-fuchsia-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-violet-200 via-purple-200 to-fuchsia-200`}>
          <motion.div
             animate={{ y: [0, -100, 0], rotate: [0, 360] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}

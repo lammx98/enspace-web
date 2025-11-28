@@ -4,7 +4,7 @@ import { TopicCardProps } from './TopicCard';
 
 const Technology: React.FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-cyan-200 via-teal-200 to-emerald-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-cyan-200 via-teal-200 to-emerald-200`}>
          <div className="absolute inset-0">
             {[...Array(5)].map((_, i) => (
                <motion.div

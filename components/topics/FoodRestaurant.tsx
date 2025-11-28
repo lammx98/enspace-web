@@ -10,7 +10,7 @@ import { TopicCardProps } from './TopicCard';
 
 const FoodRestaurant: React.FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-orange-200 via-amber-200 to-yellow-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-orange-200 via-amber-200 to-yellow-200`}>
          <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }} className="absolute top-3 left-3">
             <Star className="w-5 h-5 text-yellow-500 fill-yellow-500 opacity-60" />
          </motion.div>

@@ -4,7 +4,7 @@ import { TopicCardProps } from './TopicCard';
 
 const Transportation: React.FC<TopicCardProps> = ({ index }: TopicCardProps) => {
    return (
-      <div className={`relative h-[180px] overflow-hidden bg-gradient-to-br from-emerald-200 via-green-200 to-lime-200`}>
+      <div data-slot="topic-banner" className={`relative overflow-hidden bg-gradient-to-br from-emerald-200 via-green-200 to-lime-200`}>
          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-400 to-gray-300"></div>
          <motion.div animate={{ x: [-50, 250] }} transition={{ duration: 6, repeat: Infinity, ease: 'linear' }} className="absolute bottom-12">
             <Bus className="w-12 h-12 text-emerald-600" />
