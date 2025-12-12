@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { LessonsService, LessonDto } from '@/api/enspace-content';
 
 interface LearningPathProps {
-   topicId: string;
+   topicId: number;
    onStartLesson?: (lessonId: number) => void;
    onBack?: () => void;
 }
@@ -33,9 +33,9 @@ export function LearningPath({ topicId, onStartLesson, onBack }: LearningPathPro
    const fetchLessons = async () => {
       try {
          const response = await LessonsService.getLessons({
-            topicId: parseInt(topicId),
+            topicId,
          });
-         
+
          if (response.result) {
             const mappedLessons = response.result.map((lesson, index) => ({
                id: lesson.id!,
@@ -466,12 +466,7 @@ export function LearningPath({ topicId, onStartLesson, onBack }: LearningPathPro
 
             <div className="space-y-8">
                {lessons.map((lesson, index) => (
-                  <LessonNode 
-                     key={lesson.id} 
-                     {...lesson} 
-                     delay={index * 0.1} 
-                     onClick={() => handleLessonClick(lesson.id, lesson.status)} 
-                  />
+                  <LessonNode key={lesson.id} {...lesson} delay={index * 0.1} onClick={() => handleLessonClick(lesson.id, lesson.status)} />
                ))}
             </div>
 

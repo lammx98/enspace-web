@@ -2,6 +2,9 @@
 
 import React, { FC } from 'react';
 import { TopicCard } from './TopicCard';
+import { useAppStore } from '@/hooks/use-app';
+import { TopicDto } from '@/api/enspace-content';
+import { useRouter } from 'next/navigation';
 
 interface TopicListProps {}
 
@@ -98,10 +101,16 @@ const topics = [
    },
 ];
 const TopicList: FC<TopicListProps> = ({}) => {
+   const router = useRouter();
+   const setActiveTopic = useAppStore((state) => state.setActiveTopic);
+   const onSelectTopic = (topic: TopicDto) => {
+      setActiveTopic(topic);
+      router.push('/learn');
+   };
    return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-3 gap-6">
          {topics.map((topic) => (
-            <TopicCard topic={topic} index={topic.id} />
+            <TopicCard topic={topic} index={topic.id} onClick={() => onSelectTopic(topic)} />
          ))}
       </div>
    );

@@ -92,6 +92,7 @@ import { TopicDto } from '@/api/enspace-content';
 export interface TopicProps {
    topic: TopicDto;
    index: number;
+   onClick?: () => void;
 }
 
 export interface TopicCardProps {
@@ -116,7 +117,7 @@ export const TOPIC_CARDS: Record<number, React.ComponentType<TopicCardProps>> = 
    15: Environment,
 };
 
-export function TopicCard({ topic, index }: TopicProps) {
+export function TopicCard({ topic, index, onClick }: TopicProps) {
    const Comp: React.ComponentType<TopicCardProps> | null = TOPIC_CARDS[topic.id!];
    return (
       <motion.div
@@ -125,6 +126,7 @@ export function TopicCard({ topic, index }: TopicProps) {
          // transition={{ duration: 0.5, delay: index * 0.05 }}
          className="w-full h-[350px] bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer"
          whileHover={{ scale: 1.05, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
+         onClick={onClick}
       >
          <Comp index={index} />
 

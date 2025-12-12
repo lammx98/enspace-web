@@ -23,13 +23,6 @@ export default function LearnPage() {
    const activeTopic = useAppStore((s) => s.activeTopic);
    const router = useRouter();
 
-   useEffect(() => {
-      // Redirect to home if no topic selected
-      if (!activeTopic) {
-         router.push("/");
-      }
-   }, [activeTopic, router]);
-
    const handleBackToTopics = () => {
       router.push("/");
    };
@@ -87,9 +80,9 @@ export default function LearnPage() {
 
          <div className="flex gap-6 max-w-7xl mx-auto px-4 py-6">
             <div className="flex-1">
-               {activeTopic && (
+               {activeTopic?.id && (
                   <LearningPath
-                     topicId={activeTopic}
+                     topicId={activeTopic.id}
                      onStartLesson={handleStartQuiz}
                      onBack={handleBackToTopics}
                   />
