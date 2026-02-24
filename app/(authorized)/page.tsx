@@ -16,9 +16,9 @@ export default function HomePage() {
    // Topic Selection Screen (Home)
    return (
       <div className="min-h-screen bg-accent overflow-hidden">
-         {/* <GameHeader
+         <GameHeader
             onLeaderboardClick={() => setShowLeaderboard(!showLeaderboard)}
-         /> */}
+         />
 
          <div className="flex gap-6 max-w-5xl mx-auto px-4 py-6">
             <div className="flex-1">

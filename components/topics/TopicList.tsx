@@ -108,7 +108,7 @@ const TopicList: FC<TopicListProps> = ({}) => {
       setActiveTopic(topic);
    };
    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-2 gap-6">
          {topics.map((topic) => (
             <TopicCard topic={topic} index={topic.id} onClick={() => onSelectTopic(topic)} />
          ))}
