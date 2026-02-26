@@ -11,7 +11,7 @@ import {
    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useAuthStore } from '@/stores/auth-store';
+import { useAuthStore } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 
 interface GameHeaderProps {

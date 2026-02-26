@@ -3,6 +3,7 @@ import { AuthService } from '@/api/genzy-auth';
 import { setupApiServerToken } from '@/lib/setup-api-server';
 import { AuthProvider } from './auth-context';
 import { redirect } from 'next/navigation';
+import { COOKIE_NAMES } from '@/contants';
 
 async function getUserInfo() {
    try {
@@ -24,11 +25,11 @@ export default async function AuthorizedLayout({
    children: React.ReactNode;
 }>) {
    const cookieStore = await cookies();
-   const refreshToken = cookieStore.get('refresh_token')?.value;
-   const tokenExpiresAt = cookieStore.get('token_expires_at')?.value;
+   const refreshToken = cookieStore.get(COOKIE_NAMES.REFRESH_TOKEN)?.value;
+   const tokenExpiresAt = cookieStore.get(COOKIE_NAMES.TOKEN_EXPIRES_AT)?.value;
+   let accessToken = cookieStore.get(COOKIE_NAMES.TOKEN)?.value;
 
    let userInfo = null;
-   let accessToken = null;
 
    // TODO: uncomment this
    // if (!refreshToken) {
@@ -52,13 +53,13 @@ export default async function AuthorizedLayout({
          const newExpiresAt = payload.exp * 1000;
 
          // Update cookies
-         cookieStore.set('refresh_token', tokenResponse.refreshToken, {
+         cookieStore.set(COOKIE_NAMES.REFRESH_TOKEN, tokenResponse.refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             maxAge: 7 * 24 * 60 * 60,
          });
-         cookieStore.set('token_expires_at', newExpiresAt.toString(), {
+         cookieStore.set(COOKIE_NAMES.TOKEN_EXPIRES_AT, newExpiresAt.toString(), {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
@@ -70,7 +71,7 @@ export default async function AuthorizedLayout({
       } catch (error) {
          console.error('Token refresh failed:', error);
          // TODO: uncomment this
-         // redirect('/login'); 
+         // redirect('/login');
       }
    }
 

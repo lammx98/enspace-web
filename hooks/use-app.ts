@@ -5,6 +5,7 @@ import { persist } from "zustand/middleware";
 type AppState = {
    activeTopic: TopicDto | undefined;
    setActiveTopic: (by: TopicDto | undefined) => void;
+   destroy: () => void;
 };
 
 export const useAppStore = create<AppState>()(
@@ -13,6 +14,9 @@ export const useAppStore = create<AppState>()(
          activeTopic: undefined,
          setActiveTopic(by) {
             set(() => ({ activeTopic: by }));
+         },
+         destroy() {
+            localStorage.removeItem('enspace.state');
          },
       }),
       {

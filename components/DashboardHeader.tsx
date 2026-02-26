@@ -12,7 +12,7 @@ import {
    DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAuthStore } from '@/stores/auth-store';
+import { useAuthStore } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 
 export function DashboardHeader() {

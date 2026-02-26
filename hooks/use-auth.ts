@@ -1,9 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { AuthService, AuthResponse, AccountDTO } from '@/api/genzy-auth';
-import { setupApiClient } from '@/lib/api-setup';
-import { getCookie, setCookie, deleteCookie } from 'cookies-next';
+import { AuthService, AccountDTO } from '@/api/genzy-auth';
 import { setupApiClientToken } from '@/lib/setup-api-client';
+import { useAppStore } from './use-app';
 
 interface AuthState {
    // State
@@ -18,7 +17,7 @@ interface AuthState {
    setLoading: (loading: boolean) => void;
 
    // Auth operations
-   setRefreshToken: (refreshToken: string, expiresAt: number) => Promise<void>;
+   setRefreshToken: (refreshToken: string, expiresAt: number, accessToken?: string) => Promise<void>;
    login: (email: string, password: string) => Promise<void>;
    logout: () => Promise<void>;
    refreshAuth: () => Promise<void>;
@@ -26,10 +25,8 @@ interface AuthState {
 
    // Helper
    reset: () => void;
+   destroy: () => void;
 }
-
-const AUTH_COOKIE_NAME = 'auth_token';
-const REFRESH_TOKEN_COOKIE_NAME = 'refresh_token';
 
 const initialState = {
    user: null,
@@ -71,12 +68,12 @@ export const useAuthStore = create<AuthState>()(
             }
          },
 
-         setRefreshToken: async (refreshToken: string, expiresAt: number) => {
-            // Save refresh token và expires_at to HTTP-only cookie via API
+         setRefreshToken: async (refreshToken: string, expiresAt: number, accessToken?: string) => {
+            // Save refresh token, access token và expires_at to HTTP-only cookie via API
             await fetch('/api/auth/set-refresh', {
                method: 'POST',
                headers: { 'Content-Type': 'application/json' },
-               body: JSON.stringify({ refreshToken, expiresAt }),
+               body: JSON.stringify({ refreshToken, expiresAt, accessToken }),
             });
          },
 
@@ -91,8 +88,8 @@ export const useAuthStore = create<AuthState>()(
                // Lấy expires_at từ token
                const expiresAt = getTokenExpiresAt(response.token);
 
-               // Save refresh token và expires_at to HTTP-only cookie via API
-               await get().setRefreshToken(response.refreshToken, expiresAt);
+               // Save access token, refresh token và expires_at to HTTP-only cookie via API
+               await get().setRefreshToken(response.refreshToken, expiresAt, response.token);
 
                // Setup API clients with new token
                setupApiClientToken(response.token);
@@ -121,18 +118,11 @@ export const useAuthStore = create<AuthState>()(
             } catch (error) {
                console.error('Logout API failed:', error);
             } finally {
-               // Clear cookies
-               deleteCookie(AUTH_COOKIE_NAME);
-               deleteCookie(REFRESH_TOKEN_COOKIE_NAME);
-               deleteCookie('token_expires_at');
-
-               // Reset store
-               set({
-                  user: null,
-                  accessToken: null,
-                  isAuthenticated: false,
-                  isLoading: false,
-               });
+               // cookies will be cleared by api
+               // Reset store & clear local storage
+               get().destroy();
+               // Clear app state as well
+               useAppStore.getState().destroy();
             }
          },
 
@@ -169,6 +159,11 @@ export const useAuthStore = create<AuthState>()(
          },
 
          reset: () => set(initialState),
+
+         destroy: () => {
+            get().reset();
+            localStorage.removeItem('auth-storage');
+         },
       }),
       {
          name: 'auth-storage', // localStorage key

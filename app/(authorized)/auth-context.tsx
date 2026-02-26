@@ -2,7 +2,7 @@
 
 import React, { useEffect, ReactNode, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useAuthStore } from '@/stores/auth-store';
+import { useAuthStore } from '@/hooks/use-auth';
 import { setupApiClientToken } from '@/lib/setup-api-client';
 
 export interface AuthProviderProps {
@@ -23,12 +23,23 @@ const PUBLIC_ROUTES = ['/login', '/auth/callback'];
 export function AuthProvider({ children, userInfo, accessToken }: AuthProviderProps) {
    const router = useRouter();
    const pathname = usePathname();
-   const initialized = useRef(false);
+   const tokenInitialized = useRef(false);
+   const authInitialized = useRef(false);
    const { initializeAuth } = useAuthStore();
 
+   // Set up API token synchronously before any API calls can happen
+   // This must run synchronously, not in useEffect, to ensure token is available immediately
+   if (accessToken) {
+      if (!tokenInitialized.current) {
+         tokenInitialized.current = true;
+      }
+      // Always update token if it's provided (handles token refresh scenarios)
+      setupApiClientToken(accessToken);
+   }
+
    useEffect(() => {
-      if (initialized.current) return;
-      initialized.current = true;
+      if (authInitialized.current) return;
+      authInitialized.current = true;
 
       // Initialize auth state with server-side user info
       if (userInfo) {
@@ -37,14 +48,6 @@ export function AuthProvider({ children, userInfo, accessToken }: AuthProviderPr
    }, [userInfo, initializeAuth]);
 
    useEffect(() => {
-      if (initialized.current) return;
-      initialized.current = true;
-
-      // Set access token and user info in memory if available
-      if (accessToken) {
-         setupApiClientToken(accessToken);
-      }
-
       // Check authentication for protected routes
       const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
 
@@ -53,7 +56,7 @@ export function AuthProvider({ children, userInfo, accessToken }: AuthProviderPr
          fetch('/api/auth/logout', { method: 'POST' }).catch(console.error);
          // redirect('/login'); // TODO: uncomment this
       }
-   }, []);
+   }, [accessToken, pathname]);
 
    return <>{children}</>;
 }

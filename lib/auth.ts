@@ -1,4 +1,5 @@
 import { AuthResponse } from "@/api/genzy-auth";
+import { COOKIE_NAMES, COOKIE_OPTIONS } from "@/contants";
 import { getCookie, setCookie, deleteCookie } from "cookies-next";
 import { jwtDecode } from "jwt-decode";
 
@@ -9,35 +10,23 @@ interface JWTPayload {
   iat: number;
 }
 
-export const AUTH_COOKIE_NAME = "auth_token";
-export const REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
-export const USER_INFO_COOKIE_NAME = "user_info";
-
-const COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds
-
-const cookieOptions = {
-  maxAge: COOKIE_MAX_AGE,
-  path: "/",
-  sameSite: "lax" as const,
-};
-
 /**
  * Save complete auth data from login/register response
  * @deprecated Use Zustand store instead. This is kept for backward compatibility.
  */
 export function saveAuthData(authResponse: AuthResponse) {
-  setCookie(AUTH_COOKIE_NAME, authResponse.token, cookieOptions);
-  setCookie(REFRESH_TOKEN_COOKIE_NAME, authResponse.refreshToken, cookieOptions);
+  setCookie(COOKIE_NAMES.TOKEN, authResponse.token, COOKIE_OPTIONS);
+  setCookie(COOKIE_NAMES.REFRESH_TOKEN, authResponse.refreshToken, COOKIE_OPTIONS);
   
   if (authResponse.email && authResponse.fullName) {
     setCookie(
-      USER_INFO_COOKIE_NAME,
+      COOKIE_NAMES.USER_INFO,
       JSON.stringify({
         email: authResponse.email,
         fullName: authResponse.fullName,
         avatarUrl: authResponse.avatarUrl,
       }),
-      cookieOptions
+      COOKIE_OPTIONS
     );
   }
 }
@@ -46,8 +35,8 @@ export function saveAuthData(authResponse: AuthResponse) {
  * Save tokens to cookies
  */
 export function saveTokens({ token, refreshToken }: { token: string; refreshToken: string }) {
-  setCookie(AUTH_COOKIE_NAME, token, cookieOptions);
-  setCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieOptions);
+  setCookie(COOKIE_NAMES.TOKEN, token, COOKIE_OPTIONS);
+  setCookie(COOKIE_NAMES.REFRESH_TOKEN, refreshToken, COOKIE_OPTIONS);
 }
 
 /**
@@ -55,23 +44,23 @@ export function saveTokens({ token, refreshToken }: { token: string; refreshToke
  * @deprecated Use Zustand store instead
  */
 export function saveUserInfo(user: { email: string; fullName: string; avatarUrl?: string | null }) {
-  setCookie(USER_INFO_COOKIE_NAME, JSON.stringify(user), cookieOptions);
+  setCookie(COOKIE_NAMES.USER_INFO, JSON.stringify(user), COOKIE_OPTIONS);
 }
 
 /**
  * Clear all auth-related cookies
  */
 export function clearAuthData() {
-  deleteCookie(AUTH_COOKIE_NAME);
-  deleteCookie(REFRESH_TOKEN_COOKIE_NAME);
-  deleteCookie(USER_INFO_COOKIE_NAME);
+  deleteCookie(COOKIE_NAMES.TOKEN);
+  deleteCookie(COOKIE_NAMES.REFRESH_TOKEN);
+  deleteCookie(COOKIE_NAMES.USER_INFO);
 }
 
 /**
  * Get auth token from cookie
  */
 export function getAuthToken(): string | undefined {
-  const token = getCookie(AUTH_COOKIE_NAME);
+  const token = getCookie(COOKIE_NAMES.TOKEN);
   return typeof token === 'string' ? token : undefined;
 }
 
@@ -79,7 +68,7 @@ export function getAuthToken(): string | undefined {
  * Get refresh token from cookie
  */
 export function getRefreshToken(): string | undefined {
-  const token = getCookie(REFRESH_TOKEN_COOKIE_NAME);
+  const token = getCookie(COOKIE_NAMES.REFRESH_TOKEN);
   return typeof token === 'string' ? token : undefined;
 }
 
@@ -88,7 +77,7 @@ export function getRefreshToken(): string | undefined {
  * @deprecated Use Zustand store instead
  */
 export function getUserInfoFromCookie(): { email: string; fullName: string; avatarUrl?: string | null } | undefined {
-  const userInfo = getCookie(USER_INFO_COOKIE_NAME);
+  const userInfo = getCookie(COOKIE_NAMES.USER_INFO);
   if (!userInfo || typeof userInfo !== 'string') return undefined;
   
   try {

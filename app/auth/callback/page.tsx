@@ -16,11 +16,24 @@ export default function GoogleCallback() {
             const refreshToken = searchParams.get('refreshToken');
 
             if (token && refreshToken) {
-               // Set refresh token cookie via secure server route
+               // Lấy expires_at từ token
+               let expiresAt = 0;
+               try {
+                  const payload = JSON.parse(atob(token.split('.')[1]));
+                  expiresAt = payload.exp * 1000; // Convert to milliseconds
+               } catch (err) {
+                  console.error('Failed to decode token:', err);
+               }
+
+               // Set tokens (access token, refresh token, và expires_at) vào cookie via secure server route
                const resp = await fetch('/api/auth/set-refresh', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ refreshToken }),
+                  body: JSON.stringify({ 
+                     accessToken: token,
+                     refreshToken,
+                     expiresAt 
+                  }),
                });
                if (!resp.ok) {
                   router.push('/login');
