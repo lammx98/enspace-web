@@ -37,7 +37,7 @@ export default function LoginPage() {
    };
 
    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b">
          <Card className="w-full max-w-md mx-4">
             <CardHeader className="space-y-1">
                <CardTitle className="text-2xl font-bold text-center">Welcome back!</CardTitle>

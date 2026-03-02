@@ -31,10 +31,9 @@ export default async function AuthorizedLayout({
 
    let userInfo = null;
 
-   // TODO: uncomment this
-   // if (!refreshToken) {
-   //    redirect('/login');
-   // }
+   if (!refreshToken) {
+      redirect('/login');
+   }
 
    // Kiểm tra xem token có hết hạn không (thêm buffer 1 phút)
    const now = Date.now();
@@ -70,8 +69,7 @@ export default async function AuthorizedLayout({
          userInfo = await getUserInfo();
       } catch (error) {
          console.error('Token refresh failed:', error);
-         // TODO: uncomment this
-         // redirect('/login');
+         redirect('/login');
       }
    }
 

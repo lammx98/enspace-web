@@ -110,7 +110,7 @@ const TopicList: FC<TopicListProps> = ({}) => {
    return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-2 gap-6">
          {topics.map((topic) => (
-            <TopicCard topic={topic} index={topic.id} onClick={() => onSelectTopic(topic)} />
+            <TopicCard key={topic.id} topic={topic} index={topic.id} onClick={() => onSelectTopic(topic)} />
          ))}
       </div>
    );
