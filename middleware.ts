@@ -69,7 +69,6 @@ async function fetchToken(refreshToken: string, request: NextRequest): Promise<N
       }
 
       const data = await response.json();
-      console.log(data)
       const newToken = data.accessToken;
       const newRefreshToken = data.refreshToken;
       const newExpiresAt = data.expiresAt;

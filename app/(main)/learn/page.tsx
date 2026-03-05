@@ -2,11 +2,11 @@
 
 import { LearningPath } from '@/components/LearningPath';
 import { StreakModal } from '@/components/StreakModal';
-import { LeaderboardPanel } from '@/components/LeaderboardPanel';
+import { LeaderboardPanel } from '@/app/(main)/components/LeaderboardPanel';
 import { QuizGame } from '@/components/QuizGame';
 import { QuizResults } from '@/components/QuizResults';
 import { useState, useEffect } from 'react';
-import { GameHeader } from '@/components/GameHeader';
+import { GameHeader } from '@/app/(main)/components/GameHeader2';
 import { useAppStore } from '@/hooks/use-app';
 import { useRouter } from 'next/navigation';
 

@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { setupApiClientToken } from '@/lib/setup-api-client';
 import { AuthService } from '@/api/genzy-auth';
 
-export default function GoogleCallback() {
+function CallbackContent() {
    const router = useRouter();
    const searchParams = useSearchParams();
 
@@ -69,5 +69,19 @@ export default function GoogleCallback() {
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400">
          <div className="text-white text-2xl font-bold">Authenticating...</div>
       </div>
+   );
+}
+
+export default function GoogleCallback() {
+   return (
+      <Suspense
+         fallback={
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400">
+               <div className="text-white text-2xl font-bold">Loading...</div>
+            </div>
+         }
+      >
+         <CallbackContent />
+      </Suspense>
    );
 }
