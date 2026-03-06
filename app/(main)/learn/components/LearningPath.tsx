@@ -1,6 +1,6 @@
 import { LessonNode } from './LessonNode';
 import { Lock } from 'lucide-react';
-import { TopicHeader } from './TopicHeader';
+import { TopicHeader } from '../../../../components/TopicHeader';
 import { useState, useEffect } from 'react';
 import { LessonsService, LessonDto } from '@/api/enspace-content';
 import { useAppStore } from '@/hooks/use-app';
@@ -38,7 +38,6 @@ const defaultLessons: Lesson[] = [
 export function LearningPath({ onStartLesson, onBack }: LearningPathProps) {
    const activeTopic = useAppStore((s) => s.activeTopic);
    const [lessons, setLessons] = useState<Lesson[]>([]);
-   const [topicName, setTopicName] = useState('Learning Path');
    const [isLoading, setIsLoading] = useState(true);
 
    useEffect(() => {
@@ -64,7 +63,6 @@ export function LearningPath({ onStartLesson, onBack }: LearningPathProps) {
             }));
             setLessons(mappedLessons);
             // Use first lesson's topic info if available, or fallback
-            setTopicName('Learning Path');
          }
       } catch (error) {
          console.error('Failed to fetch lessons:', error);
@@ -105,7 +103,7 @@ export function LearningPath({ onStartLesson, onBack }: LearningPathProps) {
    return (
       <div className="relative pb-20">
          {/* Topic Header */}
-         {onBack && <TopicHeader topicName={topicName} topicEmoji="📚" onBack={onBack} />}
+         {onBack && <TopicHeader topicName={activeTopic.name || ''} topicEmoji="📚" onBack={onBack} />}
 
          {/* Learning Path */}
          <div className="relative max-w-2xl mx-auto px-4">

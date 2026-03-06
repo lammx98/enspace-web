@@ -1,5 +1,5 @@
 import { Flame, Trophy, Heart, Zap, LogOut } from 'lucide-react';
-import { Progress } from '../../../components/ui/progress';
+import { Progress } from './ui/progress';
 import { useState, useEffect } from 'react';
 import { MeService } from '@/api/enspace-progress';
 import {

@@ -1,14 +1,15 @@
 'use client';
 
-import { LearningPath } from '@/components/LearningPath';
+import { LearningPath } from '@/app/(main)/learn/components/LearningPath';
 import { StreakModal } from '@/components/StreakModal';
-import { LeaderboardPanel } from '@/app/(main)/components/LeaderboardPanel';
-import { QuizGame } from '@/components/QuizGame';
+import { LeaderboardPanel } from '@/components/LeaderboardPanel';
+import { QuizGame } from '@/components/learning/QuizGame';
 import { QuizResults } from '@/components/QuizResults';
 import { useState, useEffect } from 'react';
-import { GameHeader } from '@/app/(main)/components/GameHeader2';
+import { GameHeader } from '@/components/GameHeader2';
 import { useAppStore } from '@/hooks/use-app';
 import { useRouter } from 'next/navigation';
+import Learning from '@/components/learning';
 
 type Screen = 'learning' | 'quiz' | 'results';
 
@@ -49,7 +50,13 @@ export default function LearnPage() {
 
    // Quiz Screen
    if (currentScreen === 'quiz') {
-      return <QuizGame lessonId={selectedLesson} onExit={() => setCurrentScreen('learning')} onComplete={handleQuizComplete} />;
+      // return <QuizGame lessonId={selectedLesson} onExit={() => setCurrentScreen('learning')} onComplete={handleQuizComplete} />;
+      return (
+         <div className="fixed inset-0 z-50">
+            {/* <Learning /> */}
+            <QuizGame lessonId={selectedLesson} onExit={() => setCurrentScreen('learning')} onComplete={handleQuizComplete} />
+         </div>
+      );
    }
 
    // Results Screen

@@ -1,8 +1,9 @@
 'use client';
 
 import React, { FC } from 'react';
-import ProfileMenu from './ProfileMenu';
+import ProfileMenu from '../sidebar-menu/ProfileMenu';
 import GameHeader from './GameHeader';
+import { LeaderboardPanel } from '../LeaderboardPanel';
 
 interface SideBarContentProps {}
 

@@ -95,7 +95,7 @@ const topics = [
    // },
    // {
    //    id: 15,
-   //    name: 'Environment',
+   //    name: 'Environment',a
    //    description: 'Talking about nature and environmental issues',
    //    order: 15,
    // },
@@ -108,7 +108,7 @@ const TopicList: FC<TopicListProps> = ({}) => {
       setActiveTopic(topic);
    };
    return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 min-w-[500px] max-w-[600px] w-full">
          {topics.map((topic) => (
             <TopicCard key={topic.id} topic={topic} index={topic.id} onClick={() => onSelectTopic(topic)} />
          ))}

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Heart, Zap, CheckCircle, XCircle, ArrowRight } from "lucide-react";
-import { Progress } from "./ui/progress";
-import { Button } from "./ui/button";
+import { Progress } from "../ui/progress";
+import { Button } from "../ui/button";
 import { WordsService, WordDto } from "@/api/enspace-content";
 import { StudyService } from "@/api/enspace-progress";
 

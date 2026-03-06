@@ -4,8 +4,8 @@ import { setupApiServerToken } from '@/lib/setup-api-server';
 import { AuthProvider } from './AuthProvider';
 import { redirect } from 'next/navigation';
 import { COOKIE_NAMES } from '@/contants';
-import SideBarMenu from './components/SideBarMenu';
-import SideBarContent from './components/SideBarContent';
+import SideBarMenu from '../../components/sidebar-menu';
+import SideBarContent from '../../components/sidebar-content';
 
 async function getUserInfo() {
    try {
@@ -81,7 +81,7 @@ export default async function AuthorizedLayout({
             <div data-slot="left-sidebar" className="h-full overflow-hidden w-64 lg:w-72 sticky top-0">
                <SideBarMenu />
             </div>
-            <div data-slot="main-content" className="flex-1 bg-accent">
+            <div data-slot="main-content" className="flex-1 bg-accent h-max">
                {children}
             </div>
             <div data-slot="right-sidebar" className="w-md lg:w-lg sticky top-0">
