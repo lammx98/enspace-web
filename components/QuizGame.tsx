@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Heart, Zap, CheckCircle, XCircle, ArrowRight } from "lucide-react";
-import { Progress } from "../ui/progress";
-import { Button } from "../ui/button";
+import { Progress } from "./ui/progress";
+import { Button } from "./ui/button";
 import { WordsService, WordDto } from "@/api/enspace-content";
 import { StudyService } from "@/api/enspace-progress";
 
@@ -55,10 +55,10 @@ export function QuizGame({ lessonId, onExit, onComplete }: QuizGameProps) {
           const wrongAnswers = response.result!
             .filter(w => w.id !== word.id)
             .slice(0, 3)
-            .map(w => w.meaningVi || '');
+            .map(w => w.meaning || '');
           
-          const options = [word.meaningVi || '', ...wrongAnswers].sort(() => Math.random() - 0.5);
-          const correctIndex = options.indexOf(word.meaningVi || '');
+          const options = [word.meaning || '', ...wrongAnswers].sort(() => Math.random() - 0.5);
+          const correctIndex = options.indexOf(word.meaning || '');
 
           return {
             id: index + 1,
@@ -66,7 +66,7 @@ export function QuizGame({ lessonId, onExit, onComplete }: QuizGameProps) {
             question: `What does "${word.text}" mean?`,
             options,
             correctAnswer: correctIndex,
-            explanation: `${word.text} means "${word.meaningVi}". ${word?.examples?.[0] || ''}`,
+            explanation: `${word.text} means "${word.meaning}". ${word?.examples?.[0] || ''}`,
           };
         });
 

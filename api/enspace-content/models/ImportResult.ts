@@ -2,10 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type TopicDto = {
-    id?: number;
-    name?: string;
-    description?: string | null;
-    order?: number;
+export type ImportResult = {
+    totalRecords?: number;
+    successCount?: number;
+    errorCount?: number;
+    errors?: Array<string>;
 };
 

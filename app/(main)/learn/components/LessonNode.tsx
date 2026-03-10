@@ -76,7 +76,7 @@ export function LessonNode({
           {/* Icon or Status */}
           {status === "completed" && (
             <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
-              <CheckCircle className="w-10 h-10 text-white fill-white" />
+              <CheckCircle className="w-10 h-10 fill-white" />
             </div>
           )}
           
@@ -100,8 +100,8 @@ export function LessonNode({
 
         {/* Label */}
         <div className="mt-3 text-center max-w-[150px]">
-          <div className="text-white drop-shadow-lg">{title}</div>
-          <div className="text-sm text-white/90 drop-shadow">{subtitle}</div>
+          <div className="drop-shadow-lg">{title}</div>
+          <div className="text-sm drop-shadow">{subtitle}</div>
           
           {/* XP Badge */}
           {status !== "locked" && (

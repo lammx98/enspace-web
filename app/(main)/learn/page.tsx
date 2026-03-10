@@ -3,7 +3,7 @@
 import { LearningPath } from '@/app/(main)/learn/components/LearningPath';
 import { StreakModal } from '@/components/StreakModal';
 import { LeaderboardPanel } from '@/components/LeaderboardPanel';
-import { QuizGame } from '@/components/learning/QuizGame';
+import { QuizGame } from '@/components/QuizGame';
 import { QuizResults } from '@/components/QuizResults';
 import { useState, useEffect } from 'react';
 import { GameHeader } from '@/components/GameHeader2';
@@ -53,8 +53,7 @@ export default function LearnPage() {
       // return <QuizGame lessonId={selectedLesson} onExit={() => setCurrentScreen('learning')} onComplete={handleQuizComplete} />;
       return (
          <div className="fixed inset-0 z-50">
-            {/* <Learning /> */}
-            <QuizGame lessonId={selectedLesson} onExit={() => setCurrentScreen('learning')} onComplete={handleQuizComplete} />
+            <Learning />
          </div>
       );
    }

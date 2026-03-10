@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { LessonDto } from './LessonDto';
-export type LessonDtoListApiResponse = {
+import type { WordImportData } from './WordImportData';
+export type WordImportDataListApiResponse = {
     success?: boolean;
     message?: string | null;
-    result?: Array<LessonDto> | null;
+    result?: Array<WordImportData> | null;
     error?: any;
 };
 

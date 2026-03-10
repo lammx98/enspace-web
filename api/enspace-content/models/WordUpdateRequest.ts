@@ -5,7 +5,7 @@
 export type WordUpdateRequest = {
     lessonId?: number;
     text?: string;
-    meaningVi?: string;
+    meaning?: string;
     imageUrl?: string | null;
     examples?: Array<string>;
 };

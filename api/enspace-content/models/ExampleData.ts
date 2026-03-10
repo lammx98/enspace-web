@@ -2,10 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type TopicDto = {
-    id?: number;
-    name?: string;
-    description?: string | null;
+export type ExampleData = {
+    content?: string;
+    translation?: string | null;
     order?: number;
 };
 

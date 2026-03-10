@@ -2,11 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type WordCreateRequest = {
-    lessonId?: number;
+export type WordSearchDto = {
+    id?: number;
     text?: string;
     meaning?: string;
-    imageUrl?: string | null;
-    examples?: Array<string>;
+    pos?: number | null;
 };
 

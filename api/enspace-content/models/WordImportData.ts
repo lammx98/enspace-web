@@ -2,11 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type WordCreateRequest = {
+import type { ExampleData } from './ExampleData';
+export type WordImportData = {
+    id?: number;
     lessonId?: number;
     text?: string;
     meaning?: string;
-    imageUrl?: string | null;
-    examples?: Array<string>;
+    pos?: number | null;
+    level?: string | null;
+    examples?: Array<ExampleData>;
 };
 

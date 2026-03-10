@@ -6,7 +6,7 @@ export type WordDto = {
     id?: number;
     lessonId?: number;
     text?: string;
-    meaningVi?: string;
+    meaning?: string;
     imageUrl?: string | null;
     examples?: Array<string>;
 };

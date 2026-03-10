@@ -4,7 +4,7 @@
 /* eslint-disable */
 import type { LessonCreateRequest } from '../models/LessonCreateRequest';
 import type { LessonDtoApiResponse } from '../models/LessonDtoApiResponse';
-import type { LessonDtoListApiResponse } from '../models/LessonDtoListApiResponse';
+import type { LessonListItemDtoListApiResponse } from '../models/LessonListItemDtoListApiResponse';
 import type { LessonUpdateRequest } from '../models/LessonUpdateRequest';
 import type { ObjectApiResponse } from '../models/ObjectApiResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -12,14 +12,14 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class LessonsService {
     /**
-     * @returns LessonDtoListApiResponse OK
+     * @returns LessonListItemDtoListApiResponse OK
      * @throws ApiError
      */
     public static getLessons({
         topicId,
     }: {
         topicId?: number,
-    }): CancelablePromise<LessonDtoListApiResponse> {
+    }): CancelablePromise<LessonListItemDtoListApiResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/lessons',

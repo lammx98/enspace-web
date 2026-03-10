@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ActivityDto } from './ActivityDto';
 import type { DifficultyDto } from './DifficultyDto';
 export type LessonDto = {
     id?: number;
@@ -9,5 +10,6 @@ export type LessonDto = {
     title?: string;
     difficulty?: DifficultyDto;
     order?: number;
+    activities?: Array<ActivityDto>;
 };
 

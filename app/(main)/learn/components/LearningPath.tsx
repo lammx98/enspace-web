@@ -2,7 +2,7 @@ import { LessonNode } from './LessonNode';
 import { Lock } from 'lucide-react';
 import { TopicHeader } from '../../../../components/TopicHeader';
 import { useState, useEffect } from 'react';
-import { LessonsService, LessonDto } from '@/api/enspace-content';
+import { LessonsService, LessonDto, LessonListItemDto } from '@/api/enspace-content';
 import { useAppStore } from '@/hooks/use-app';
 
 interface LearningPathProps {
@@ -10,7 +10,7 @@ interface LearningPathProps {
    onBack?: () => void;
 }
 
-interface Lesson {
+interface LessonDetail {
    id: number;
    title: string;
    subtitle: string;
@@ -21,23 +21,9 @@ interface Lesson {
    icon: string;
 }
 
-// Fallback topic data for when API fails
-const defaultLessons: Lesson[] = [
-   {
-      id: 1,
-      title: 'Unit 1',
-      subtitle: 'Getting Started',
-      type: 'lesson',
-      status: 'current',
-      xp: 50,
-      position: 'left',
-      icon: '👋',
-   },
-];
-
 export function LearningPath({ onStartLesson, onBack }: LearningPathProps) {
    const activeTopic = useAppStore((s) => s.activeTopic);
-   const [lessons, setLessons] = useState<Lesson[]>([]);
+   const [lessons, setLessons] = useState<LessonDetail[]>([]);
    const [isLoading, setIsLoading] = useState(true);
 
    useEffect(() => {
@@ -53,25 +39,24 @@ export function LearningPath({ onStartLesson, onBack }: LearningPathProps) {
          if (response.result) {
             const mappedLessons = response.result.map((lesson, index) => ({
                id: lesson.id!,
-               title: `Unit ${index + 1}`,
-               subtitle: lesson.title || '',
+               title: lesson.title || '',
+               subtitle: '',
                type: 'lesson' as const,
                status: (index === 0 ? 'current' : 'locked') as 'completed' | 'current' | 'locked',
                xp: 50,
-               position: (index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'center') as 'left' | 'right' | 'center',
                icon: getIconForIndex(index),
+               position: getPosition(index),
             }));
             setLessons(mappedLessons);
             // Use first lesson's topic info if available, or fallback
          }
       } catch (error) {
          console.error('Failed to fetch lessons:', error);
-         // Use fallback data
-         setLessons(defaultLessons);
       } finally {
          setIsLoading(false);
       }
    };
+
 
    const getIconForIndex = (index: number) => {
       const icons = ['👋', '🙋', '💪', '🔢', '🎨', '📝', '🎯', '🎮'];
@@ -112,7 +97,12 @@ export function LearningPath({ onStartLesson, onBack }: LearningPathProps) {
 
             <div className="space-y-8">
                {lessons.map((lesson, index) => (
-                  <LessonNode key={lesson.id} {...lesson} delay={index * 0.1} onClick={() => handleLessonClick(lesson.id, lesson.status)} />
+                  <LessonNode
+                     key={lesson.id}
+                     {...lesson}
+                     delay={index * 0.1}
+                     onClick={() => handleLessonClick(lesson.id, lesson.status)}
+                  />
                ))}
             </div>
 
@@ -127,3 +117,7 @@ export function LearningPath({ onStartLesson, onBack }: LearningPathProps) {
       </div>
    );
 }
+
+const getPosition = (index: number) => {
+   return (index % 3 === 0 ? 'left' : index % 3 === 1 ? 'right' : 'center') as 'left' | 'right' | 'center';
+};
